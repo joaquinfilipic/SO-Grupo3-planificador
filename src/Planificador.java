@@ -21,7 +21,7 @@ public class Planificador {
     private static void crearProcesos(){
         p1 = new Proceso(1, 1, 3);
         p2 = new Proceso(2, 0, 4);
-        p3 = new Proceso(3, 10, 2);
+        p3 = new Proceso(3, 13, 2);
 
         newQ.add(p1);
         newQ.add(p2);
@@ -30,11 +30,11 @@ public class Planificador {
     }
 
     private static void chequearLlegadasProcesos(){
-        if (time == 0)
-            readyQ.add(p2);
-        else if(time == 1)
+        if (time == p1.getAT())
             readyQ.add(p1);
-        else if(time == 10)
+        else if(time == p2.getAT())
+            readyQ.add(p2);
+        else if(time == p3.getAT())
             readyQ.add(p3);
     }
 
