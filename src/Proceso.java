@@ -1,3 +1,5 @@
+import java.util.Queue;
+
 /**
  * Created by joaquin on 01/05/17.
  */
@@ -5,12 +7,13 @@
 public class Proceso {
     private int pNum;   //Process Number
     private int aT;     //Arrival Time
-    private int cpuT;   //CPU Time
+    private Queue<Tarea> taskQ;
+    //private int cpuT;   //CPU Time
 
-    public Proceso(int pNum, int aT, int cpuT){
+    public Proceso(int pNum, int aT, Queue<Tarea> q){
         this.pNum = pNum;
         this.aT = aT;
-        this.cpuT = cpuT;
+        this.taskQ = q;
     }
 
     public int getPNum(){
@@ -19,15 +22,23 @@ public class Proceso {
     public int getAT(){
         return aT;
     }
-    public int getCPUT(){
-        return cpuT;
-    }
-    public void decreaseCPUT(){
-        cpuT--;
-    }
-    public boolean isCPUTCero(){
-        if(cpuT == 0)
+    public Queue<Tarea> getTaskQ(){ return taskQ; }
+
+    public boolean blockedTimeFinish(){
+        if (taskQ.peek() != null && taskQ.peek().getTaskTipe() != Tarea.TIPOTAREA.CPU && isTaskTCero()){
             return true;
-        return false;
+        }
+        else return false;
+    }
+    /*public int getCPUT(){
+        return cpuT;
+    }*/
+    public void decreaseTaskT(){
+            taskQ.peek().decreaseTaskTime();
+    }
+    public boolean isTaskTCero(){
+            if (taskQ.peek().isTaskTimeCero())
+                return true;
+            return false;
     }
 }
