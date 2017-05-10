@@ -1,18 +1,18 @@
 /**
- * Created by joaquin on 06/05/17.
+ * Created by joaquin on 10/05/17.
  */
 
-public class Tarea {
-    public enum TIPOTAREA{ CPU, IO1, IO2, IO3 };
-    private TIPOTAREA taskType;
+public class Task {
+    public enum TASKTYPE{ CPU, IO1, IO2, IO3 };
+    private TASKTYPE taskType;
     private int taskTime;
 
-    public Tarea (TIPOTAREA type, int time){
+    public Task(TASKTYPE type, int time){
         this.taskType = type;
         this.taskTime = time;
     }
 
-    public TIPOTAREA getTaskType(){ return taskType; }
+    public TASKTYPE getTaskType(){ return taskType; }
     public int getTaskTime(){ return taskTime; }
     public void decreaseTaskTime(){
         taskTime--;

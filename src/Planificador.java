@@ -180,7 +180,7 @@ public class Planificador {
                 else{
                     auxP.getTaskQ().poll();
                     if (auxP.getTaskQ().peek() != null) {
-                        Tarea.TIPOTAREA auxTT = auxP.getTaskQ().peek().getTaskTipe();
+                        Tarea.TIPOTAREA auxTT = auxP.getTaskQ().peek().getTaskType();
                         switch (auxTT) {
                             case CPU:
                                 readyQ.add(auxP);

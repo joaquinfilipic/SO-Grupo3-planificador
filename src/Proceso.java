@@ -25,7 +25,7 @@ public class Proceso {
     public Queue<Tarea> getTaskQ(){ return taskQ; }
 
     public boolean blockedTimeFinish(){
-        if (taskQ.peek() != null && taskQ.peek().getTaskTipe() != Tarea.TIPOTAREA.CPU && isTaskTCero()){
+        if (taskQ.peek() != null && taskQ.peek().getTaskType() != Tarea.TIPOTAREA.CPU && isTaskTCero()){
             return true;
         }
         else return false;
