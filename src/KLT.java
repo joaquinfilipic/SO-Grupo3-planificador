@@ -4,26 +4,29 @@ import java.util.Queue;
  * Created by joaquin on 10/05/17.
  */
 
-public class KLT {
-    private int KLTID;
-    private int arrivalTime;
-    private ThreadLibrary threadLibrary;
+public class KLT extends Thing {
+    private Scheduler scheduler;
+    private Queue<ULT> ULTQueue;
     private Queue<Task> taskQueue;
 
-    public KLT(int ID, int AT, ThreadLibrary TL){
-        this.KLTID = ID;
-        this. arrivalTime = AT;
-        this.threadLibrary = TL;
-        this.taskQueue = null;
+    public KLT(int id, int AT, Scheduler s){
+        ID = id;
+        arrivalTime = AT;
+        scheduler = s;
+        taskQueue = null;
     }
-    public KLT(int ID, int AT, Queue<Task> TQ){
-        this.KLTID = ID;
-        this.arrivalTime = AT;
-        this.taskQueue = TQ;
-        this.threadLibrary = null;
+    public KLT(int id, int AT, Queue<Task> TQ){
+        ID = id;
+        arrivalTime = AT;
+        taskQueue = TQ;
+        scheduler = null;
     }
 
-    public int getKLTID(){ return KLTID; }
-    public int getArrivalTime(){ return arrivalTime; }
-    public Queue<Task> getTaskQueue(){ return taskQueue; }
+    public Queue<Task> getTaskQueue(){
+        return taskQueue;
+    }
+
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
 }

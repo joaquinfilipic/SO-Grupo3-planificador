@@ -1,14 +1,18 @@
-import java.util.ArrayList;
 import java.util.Queue;
 
 /**
  * Created by joaquin on 10/05/17.
  */
+
 public class Scheduler {
-    public enum ALGORITHM { FIFO, SRT };
+    public enum ALGORITHM { FIFO, RR, SPR, SRT, HRRN };
     private ALGORITHM algorithm;
-    private Queue<Process> readyQueue;
-    private ArrayList<Queue<Process>> blockedQueuesArray;
-    private ArrayList<Core> coresArray;
-    private int timer;
+    private Queue<Thing> thingsQueue;
+
+    public Scheduler(ALGORITHM alg, Queue<Thing> TQ){
+        algorithm = alg;
+        thingsQueue = TQ;
+    }
+
+    public void schedule(){}
 }

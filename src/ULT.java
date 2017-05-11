@@ -4,18 +4,16 @@ import java.util.Queue;
  * Created by joaquin on 10/05/17.
  */
 
-public class ULT {
-    private int ULTID;
-    private int arrivalTime;
+public class ULT extends Thing {
     private Queue<Task> taskQueue;
 
-    public ULT(int ID, int AT, Queue<Task> TQ){
-        this.ULTID = ID;
-        this.arrivalTime = AT;
-        this.taskQueue = TQ;
+    public ULT(int id, int AT, Queue<Task> TQ){
+        ID = id;
+        arrivalTime = AT;
+        taskQueue = TQ;
     }
 
-    public int getULTID(){ return ULTID; }
-    public int getArrivalTime(){ return arrivalTime; }
-    public Queue<Task> getTaskQueue(){ return taskQueue; }
+    public Queue<Task> getTaskQueue(){
+        return taskQueue;
+    }
 }

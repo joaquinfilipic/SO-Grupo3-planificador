@@ -12,8 +12,12 @@ public class Task {
         this.taskTime = time;
     }
 
-    public TASKTYPE getTaskType(){ return taskType; }
-    public int getTaskTime(){ return taskTime; }
+    public TASKTYPE getTaskType(){
+        return taskType;
+    }
+    public int getTaskTime(){
+        return taskTime;
+    }
     public void decreaseTaskTime(){
         taskTime--;
     }
