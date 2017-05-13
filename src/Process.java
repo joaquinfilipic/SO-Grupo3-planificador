@@ -22,4 +22,8 @@ public class Process extends Thing {
     public Scheduler getScheduler() {
         return scheduler;
     }
+
+    public void schedule(){
+        scheduler.schedule();
+    }
 }
