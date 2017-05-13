@@ -6,24 +6,38 @@ import java.util.Queue;
  */
 
 public class Process extends Thing {
-    private Queue<KLT> KLTQueue;
+    private ArrayList<Thing> KLTArray;
     private Scheduler scheduler;
 
-    public Process(int id, int AT, Queue<KLT> q, Scheduler s){
+    public Process(int id, ArrayList<Thing> a, Scheduler s){
         ID = id;
-        arrivalTime = AT;
-        KLTQueue = q;
+        KLTArray = a;
         scheduler = s;
     }
 
-    public Queue<KLT> getKLTQueue(){
-        return KLTQueue;
-    }
     public Scheduler getScheduler() {
         return scheduler;
     }
 
-    public void schedule(){
-        scheduler.schedule();
+    public ArrayList<Thing> getKLTArray(){ return KLTArray; }
+
+    public boolean hasReadyKLT(){
+        for(Thing klt: KLTArray){
+            if( ((KLT)klt).getKltstate() == KLT.KLTSTATE.READY)
+                return true;
+        }
+        return false;
+    }
+
+    public void schedule(Scheduler.ALGORITHM alg){
+        scheduler.schedule(Scheduler.ALGORITHM.FIFO, KLTArray);
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == null)
+            return false;
+        Process p = (Process) o;
+        return ID == p.getID();
     }
 }

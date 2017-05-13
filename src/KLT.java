@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Queue;
 
 /**
@@ -5,23 +6,34 @@ import java.util.Queue;
  */
 
 public class KLT extends Thing {
+    public enum KLTSTATE { BLOCKED, READY, RUNNING}
+    private KLTSTATE kltstate;
+    private Process parentProcess;
     private Scheduler scheduler;
-    private Queue<ULT> ULTQueue;
+    private ArrayList<Thing> ULTArray;
     private Queue<Task> taskQueue;
     private Core assignedCore;
 
-    public KLT(int id, int AT, Scheduler s){
+    public KLT(int id, Process pp, int AT, Scheduler s, ArrayList<Thing> a){
         ID = id;
+        parentProcess = pp;
+        kltstate = KLTSTATE.READY;
         arrivalTime = AT;
         scheduler = s;
+        ULTArray = a;
         taskQueue = null;
     }
-    public KLT(int id, int AT, Queue<Task> TQ){
+    public KLT(int id, Process pp, int AT, Queue<Task> TQ){
         ID = id;
+        parentProcess = pp;
+        kltstate = KLTSTATE.READY;
         arrivalTime = AT;
         taskQueue = TQ;
         scheduler = null;
+        ULTArray = null;
     }
+
+    public Process getParentProcess(){ return parentProcess; }
 
     public Queue<Task> getTaskQueue(){
         return taskQueue;
@@ -32,6 +44,12 @@ public class KLT extends Thing {
     }
 
     public Core getAssignedCore(){ return assignedCore; }
+
+    public KLTSTATE getKltstate(){ return kltstate; }
+
+    public void changeState(KLTSTATE s){
+        kltstate = s;
+    }
 
     public void assignCore(Core c){
         assignedCore = c;
@@ -64,9 +82,17 @@ public class KLT extends Thing {
         return false;
     }
 
-    public void schedule() {
+    public void schedule(Scheduler.ALGORITHM alg) {
         if(scheduler != null){
-            scheduler.schedule();
+            scheduler.schedule(Scheduler.ALGORITHM.FIFO, ULTArray);
         }
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == null)
+            return false;
+        KLT klt = (KLT) o;
+        return ID == klt.getID();
     }
 }

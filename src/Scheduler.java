@@ -1,4 +1,4 @@
-import java.util.Queue;
+import java.util.ArrayList;
 
 /**
  * Created by joaquin on 10/05/17.
@@ -7,12 +7,23 @@ import java.util.Queue;
 public class Scheduler {
     public enum ALGORITHM { FIFO, RR, SPR, SRT, HRRN };
     private ALGORITHM algorithm;
-    private Queue<Thing> thingsQueue;
+    private ArrayList<Thing> thingsArray;
 
-    public Scheduler(ALGORITHM alg, Queue<Thing> TQ){
+    public Scheduler(ALGORITHM alg, ArrayList<Thing> TA){
         algorithm = alg;
-        thingsQueue = TQ;
+        thingsArray = TA;
     }
 
-    public void schedule(){}
+    public Thing schedule(ALGORITHM alg, ArrayList<Thing> thingsArray){
+        if(alg == ALGORITHM.FIFO){
+            if(thingsArray.isEmpty()){
+                return null;
+            }
+            return thingsArray.get(0);
+        }
+        else if(alg == ALGORITHM.SRT){
+            return null;
+        }
+        else return null;
+    }
 }

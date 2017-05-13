@@ -16,4 +16,12 @@ public class Core {
     public void assignRunningKLT(KLT klt){
         runningKLT = klt;
     }
+    public void setRunningKLTNull(){
+        runningKLT = null;
+    }
+    public boolean isFree(){
+        if(runningKLT == null)
+            return true;
+        return false;
+    }
 }
