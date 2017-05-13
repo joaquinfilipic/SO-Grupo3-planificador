@@ -62,7 +62,7 @@ public class MainClass {
             boolean MoreProcesses = false;
             if(pArray != null)
                 MoreProcesses = true;
-            while ( (i < size) && (i < freeCores) && MoreProcesses){
+            while ( (i < freeCores) && MoreProcesses){
                 auxP = (Process) scheduler.schedule(Scheduler.ALGORITHM.FIFO, pArray);
                 if(auxP == null)
                     MoreProcesses = false;
@@ -73,24 +73,25 @@ public class MainClass {
                             kltArray.add((KLT) klt);
                         }
                     }
-                }
-                boolean MoreKLTs = false;
-                if(kltArray != null)
-                    MoreKLTs = true;
-                while( i < freeCores && MoreKLTs){
-                    auxKLT = (KLT) auxP.getScheduler().schedule(Scheduler.ALGORITHM.FIFO, auxP.getKLTArray());
-                    if(auxKLT == null)
-                        MoreKLTs = false;
-                    else {
-                        kltArray.remove(auxKLT);
-                        int j = 0;
-                        while (j < coresArray.size() && i < freeCores) {
-                            if (auxKLT.getKltstate() == KLT.KLTSTATE.READY && auxKLT.checkCore(coresArray.get(j))) {
-                                auxKLT.changeState(KLT.KLTSTATE.RUNNING);
-                                coresArray.get(j).assignRunningKLT(auxKLT);
-                                i++;
+
+                    boolean MoreKLTs = false;
+                    if (kltArray != null)
+                        MoreKLTs = true;
+                    while (i < freeCores && MoreKLTs) {
+                        auxKLT = (KLT) auxP.getScheduler().schedule(Scheduler.ALGORITHM.FIFO, auxP.getKLTArray());
+                        if (auxKLT == null)
+                            MoreKLTs = false;
+                        else {
+                            kltArray.remove(auxKLT);
+                            int j = 0;
+                            while (j < coresArray.size() && i < freeCores) {
+                                if (auxKLT.getKltstate() == KLT.KLTSTATE.READY && auxKLT.checkCore(coresArray.get(j))) {
+                                    auxKLT.changeState(KLT.KLTSTATE.RUNNING);
+                                    coresArray.get(j).assignRunningKLT(auxKLT);
+                                    i++;
+                                }
+                                j++;
                             }
-                            j++;
                         }
                     }
                 }
@@ -108,6 +109,7 @@ public class MainClass {
             for(int k = 0; k < coresArray.size(); k++) {
                 if (!coresArray.get(k).isFree()) {
                     KLT auxKLT2 = coresArray.get(k).getRunningKLT();
+                    coresArray.get(k).setRunningKLTNull();
                     //fill matrix
                     auxKLT2.decreaseTaskTime();
                     if (!auxKLT2.isTaskTimeCero()) {
