@@ -29,6 +29,7 @@ public class MainClass {
             if(blockedQ != null && !blockedQ.isEmpty()){
                 if(blockedQ.peek().isTaskTimeCero()){
                     blockedQ.peek().getTaskQueue().poll();
+                    blockedQ.peek().changeState(KLT.KLTSTATE.READY);
                     readyQueue.add(blockedQ.poll());
                 }
             }
@@ -58,22 +59,39 @@ public class MainClass {
             int i = 0;
             int size = pArray.size();
             int freeCores = coresArray.size();
-            while ( (i < size) && (i < freeCores)){
+            boolean MoreProcesses = false;
+            if(pArray != null)
+                MoreProcesses = true;
+            while ( (i < size) && (i < freeCores) && MoreProcesses){
                 auxP = (Process) scheduler.schedule(Scheduler.ALGORITHM.FIFO, pArray);
-                pArray.remove(auxP);
-                for(Thing klt: auxP.getKLTArray()){
-                    kltArray.add((KLT)klt);
-                }
-                while( i < freeCores ){
-                    auxKLT = (KLT) auxP.getScheduler().schedule(Scheduler.ALGORITHM.FIFO, auxP.getKLTArray());
-                    kltArray.remove(auxKLT);
-                    int j = 0;
-                    while(j < coresArray.size() && i < freeCores) {
-                        if (auxKLT.checkCore(coresArray.get(j))) {
-                            coresArray.get(j).assignRunningKLT(auxKLT);
-                            i++;
+                if(auxP == null)
+                    MoreProcesses = false;
+                else {
+                    pArray.remove(auxP);
+                    for (Thing klt : auxP.getKLTArray()) {
+                        if (((KLT) klt).getKltstate() == KLT.KLTSTATE.READY && klt.getArrivalTime() <= timer) {
+                            kltArray.add((KLT) klt);
                         }
-                        j++;
+                    }
+                }
+                boolean MoreKLTs = false;
+                if(kltArray != null)
+                    MoreKLTs = true;
+                while( i < freeCores && MoreKLTs){
+                    auxKLT = (KLT) auxP.getScheduler().schedule(Scheduler.ALGORITHM.FIFO, auxP.getKLTArray());
+                    if(auxKLT == null)
+                        MoreKLTs = false;
+                    else {
+                        kltArray.remove(auxKLT);
+                        int j = 0;
+                        while (j < coresArray.size() && i < freeCores) {
+                            if (auxKLT.getKltstate() == KLT.KLTSTATE.READY && auxKLT.checkCore(coresArray.get(j))) {
+                                auxKLT.changeState(KLT.KLTSTATE.RUNNING);
+                                coresArray.get(j).assignRunningKLT(auxKLT);
+                                i++;
+                            }
+                            j++;
+                        }
                     }
                 }
             }
@@ -103,12 +121,15 @@ public class MainClass {
                                     readyQueue.add(0, auxKLT2);
                                     break;
                                 case IO1:
+                                    auxKLT2.changeState(KLT.KLTSTATE.BLOCKED);
                                     blockedQueuesArray.get(0).add(auxKLT2);
                                     break;
                                 case IO2:
+                                    auxKLT2.changeState(KLT.KLTSTATE.BLOCKED);
                                     blockedQueuesArray.get(1).add(auxKLT2);
                                     break;
                                 case IO3:
+                                    auxKLT2.changeState(KLT.KLTSTATE.BLOCKED);
                                     blockedQueuesArray.get(2).add(auxKLT2);
                                     break;
                             }

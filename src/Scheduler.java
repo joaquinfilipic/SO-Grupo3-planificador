@@ -15,6 +15,8 @@ public class Scheduler {
     }
 
     public Thing schedule(ALGORITHM alg, ArrayList<Thing> thingsArray){
+        if(thingsArray == null)
+            return null;
         if(alg == ALGORITHM.FIFO){
             if(thingsArray.isEmpty()){
                 return null;
