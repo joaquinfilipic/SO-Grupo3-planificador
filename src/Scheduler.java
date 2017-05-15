@@ -9,13 +9,15 @@ public class Scheduler {
     private ALGORITHM algorithm;
     private ArrayList<Thing> thingsArray;
 
+    public Scheduler(){}
+
     public Scheduler(ALGORITHM alg, ArrayList<Thing> TA){
         algorithm = alg;
         thingsArray = TA;
     }
 
     public Thing schedule(ALGORITHM alg, ArrayList<Thing> thingsArray){
-        if(thingsArray == null)
+        if(thingsArray == null || thingsArray.size() == 0)
             return null;
         if(alg == ALGORITHM.FIFO){
             if(thingsArray.isEmpty()){

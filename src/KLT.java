@@ -14,23 +14,25 @@ public class KLT extends Thing {
     private Queue<Task> taskQueue;
     private Core assignedCore;
 
-    public KLT(int id, Process pp, int AT, Scheduler s, ArrayList<Thing> a){
+    public KLT(int id, int AT, Scheduler s, ArrayList<Thing> a){
         ID = id;
-        parentProcess = pp;
         kltstate = KLTSTATE.READY;
         arrivalTime = AT;
         scheduler = s;
         ULTArray = a;
         taskQueue = null;
     }
-    public KLT(int id, Process pp, int AT, Queue<Task> TQ){
+    public KLT(int id, int AT, Queue<Task> TQ){
         ID = id;
-        parentProcess = pp;
         kltstate = KLTSTATE.READY;
         arrivalTime = AT;
         taskQueue = TQ;
         scheduler = null;
         ULTArray = null;
+    }
+
+    public void setParentProcess(Process p){
+        parentProcess = p;
     }
 
     public Process getParentProcess(){ return parentProcess; }
@@ -54,6 +56,7 @@ public class KLT extends Thing {
     public void assignCore(Core c){
         assignedCore = c;
     }
+
     public boolean checkCore(Core c){
         if(assignedCore == null){
             assignCore(c);
