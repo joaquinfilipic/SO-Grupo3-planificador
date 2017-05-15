@@ -260,7 +260,7 @@ public class MainClass {
 
                     auxKLT2.decreaseTaskTime();
                     if (!auxKLT2.isTaskTimeCero()) {
-                        auxKLT2.changeState(KLT.KLTSTATE.READY);
+                        auxKLT2.changeState(KLT.KLTSTATE.READY);;
                         readyQueue.add(0, auxKLT2);
                     } else {
                         auxKLT2.getTaskQueue().poll();
