@@ -14,11 +14,13 @@ public class MainClass {
     private static Scheduler scheduler;
     private static int timer;
     private static char[][] matrix;
+    private static int totalThreadsCount;
 
     //EXAMPLE
     public static void createEverything(){
         readyQueue = new ArrayList<>();
         blockedQueuesArray = new ArrayList<>();
+        blockedQueuesArray.add(new LinkedList<>());
         blockedQueuesArray.add(new LinkedList<>());
         blockedQueuesArray.add(new LinkedList<>());
         coresArray = new ArrayList<>();
@@ -27,9 +29,10 @@ public class MainClass {
         coresArray.add(core1);
         coresArray.add(core2);
         scheduler = new Scheduler();
-        matrix = new char[8][50];
+        totalThreadsCount = 8;
+        matrix = new char[totalThreadsCount+3][50];
         //Matriz vacía
-        for (int i=0; i<8; i++){
+        for (int i=0; i<(totalThreadsCount+3); i++){
             for (int j=0; j<50; j++){
                 matrix[i][j] = ' ';
             }
@@ -43,98 +46,106 @@ public class MainClass {
         Task t1K1 = new Task(Task.TASKTYPE.CPU, 3);
         Task t2K1 = new Task(Task.TASKTYPE.IO1, 1);
         Task t3K1 = new Task(Task.TASKTYPE.CPU, 2);
-        Task t4K1 = new Task(Task.TASKTYPE.IO2, 2);
-        Task t5K1 = new Task(Task.TASKTYPE.CPU, 1);
         Queue<Task> k1TaskQ = new LinkedList<>();
         k1TaskQ.add(t1K1);
         k1TaskQ.add(t2K1);
         k1TaskQ.add(t3K1);
-        k1TaskQ.add(t4K1);
-        k1TaskQ.add(t5K1);
         Task t1K2 = new Task(Task.TASKTYPE.CPU, 2);
-        Task t2K2 = new Task(Task.TASKTYPE.IO1, 2);
-        Task t3K2 = new Task(Task.TASKTYPE.CPU, 2);
-        Task t4K2 = new Task(Task.TASKTYPE.IO2, 1);
-        Task t5K2 = new Task(Task.TASKTYPE.CPU, 3);
+        Task t2K2 = new Task(Task.TASKTYPE.IO2, 2);
+        Task t3K2 = new Task(Task.TASKTYPE.CPU, 3);
         Queue<Task> k2TaskQ = new LinkedList<>();
         k2TaskQ.add(t1K2);
         k2TaskQ.add(t2K2);
         k2TaskQ.add(t3K2);
-        k2TaskQ.add(t4K2);
-        k2TaskQ.add(t5K2);
         Task t1K3 = new Task(Task.TASKTYPE.CPU, 1);
-        Task t2K3 = new Task(Task.TASKTYPE.IO1, 2);
-        Task t3K3 = new Task(Task.TASKTYPE.CPU, 1);
-        Task t4K3 = new Task(Task.TASKTYPE.IO2, 2);
-        Task t5K3 = new Task(Task.TASKTYPE.CPU, 4);
+        Task t2K3 = new Task(Task.TASKTYPE.CPU, 3);
+        Task t3K3 = new Task(Task.TASKTYPE.IO1, 2);
+        Task t4K3 = new Task(Task.TASKTYPE.CPU, 2);
         Queue<Task> k3TaskQ = new LinkedList<>();
         k3TaskQ.add(t1K3);
         k3TaskQ.add(t2K3);
         k3TaskQ.add(t3K3);
         k3TaskQ.add(t4K3);
-        k3TaskQ.add(t5K3);
+
         Task t1K4 = new Task(Task.TASKTYPE.CPU, 2);
-        Task t2K4 = new Task(Task.TASKTYPE.IO1, 1);
-        Task t3K4 = new Task(Task.TASKTYPE.CPU, 3);
-        Task t4K4 = new Task(Task.TASKTYPE.IO2, 2);
-        Task t5K4 = new Task(Task.TASKTYPE.CPU, 1);
+        Task t2K4 = new Task(Task.TASKTYPE.CPU, 2);
+        Task t3K4 = new Task(Task.TASKTYPE.IO2, 1);
+        Task t4K4 = new Task(Task.TASKTYPE.CPU, 1);
         Queue<Task> k4TaskQ = new LinkedList<>();
         k4TaskQ.add(t1K4);
         k4TaskQ.add(t2K4);
         k4TaskQ.add(t3K4);
         k4TaskQ.add(t4K4);
-        k4TaskQ.add(t5K4);
         Task t1K5 = new Task(Task.TASKTYPE.CPU, 2);
         Task t2K5 = new Task(Task.TASKTYPE.IO1, 3);
         Task t3K5 = new Task(Task.TASKTYPE.CPU, 1);
-        Task t4K5 = new Task(Task.TASKTYPE.IO2, 1);
-        Task t5K5 = new Task(Task.TASKTYPE.CPU, 2);
         Queue<Task> k5TaskQ = new LinkedList<>();
         k5TaskQ.add(t1K5);
         k5TaskQ.add(t2K5);
         k5TaskQ.add(t3K5);
-        k5TaskQ.add(t4K5);
-        k5TaskQ.add(t5K5);
-        Task t1K6 = new Task(Task.TASKTYPE.CPU, 3);
+        Task t1K6 = new Task(Task.TASKTYPE.CPU, 1);
         Task t2K6 = new Task(Task.TASKTYPE.IO1, 1);
-        Task t3K6 = new Task(Task.TASKTYPE.CPU, 1);
-        Task t4K6 = new Task(Task.TASKTYPE.IO2, 2);
-        Task t5K6 = new Task(Task.TASKTYPE.CPU, 2);
+        Task t3K6 = new Task(Task.TASKTYPE.CPU, 3);
+        Task t4K6 = new Task(Task.TASKTYPE.IO3, 2);
+        Task t5K6 = new Task(Task.TASKTYPE.CPU, 1);
         Queue<Task> k6TaskQ = new LinkedList<>();
         k6TaskQ.add(t1K6);
         k6TaskQ.add(t2K6);
         k6TaskQ.add(t3K6);
         k6TaskQ.add(t4K6);
         k6TaskQ.add(t5K6);
+        Task t1K7 = new Task(Task.TASKTYPE.CPU, 4);
+        Task t2K7 = new Task(Task.TASKTYPE.CPU, 1);
+        Task t3K7 = new Task(Task.TASKTYPE.IO2, 3);
+        Task t4K7 = new Task(Task.TASKTYPE.CPU, 2);
+        Queue<Task> k7TaskQ = new LinkedList<>();
+        k7TaskQ.add(t1K7);
+        k7TaskQ.add(t2K7);
+        k7TaskQ.add(t3K7);
+        k7TaskQ.add(t4K7);
+
+        Task t1K8 = new Task(Task.TASKTYPE.CPU, 3);
+        Task t2K8 = new Task(Task.TASKTYPE.IO3, 2);
+        Task t3K8 = new Task(Task.TASKTYPE.CPU, 1);
+        Queue<Task> k8TaskQ = new LinkedList<>();
+        k8TaskQ.add(t1K8);
+        k8TaskQ.add(t2K8);
+        k8TaskQ.add(t3K8);
 
         //KLTs
         KLT k1 = new KLT(1, 0, k1TaskQ);
-        KLT k2 = new KLT(2, 1, k2TaskQ);
+        KLT k2 = new KLT(2, 0, k2TaskQ);
         KLT k3 = new KLT(3, 0, k3TaskQ);
-        KLT k4 = new KLT(4, 1, k4TaskQ);
-        KLT k5 = new KLT(5, 2, k5TaskQ);
-        KLT k6 = new KLT(6, 4, k6TaskQ);
+        KLT k4 = new KLT(4, 0, k4TaskQ);
+        KLT k5 = new KLT(5, 0, k5TaskQ);
+        KLT k6 = new KLT(6, 0, k6TaskQ);
+        KLT k7 = new KLT(7, 0, k7TaskQ);
+        KLT k8 = new KLT(8, 0, k8TaskQ);
 
         //PROCESSES
         ArrayList<Thing> p1ArrayT = new ArrayList<>();
         p1ArrayT.add(k1);
         p1ArrayT.add(k2);
+        p1ArrayT.add(k3);
         ArrayList<Thing> p2ArrayT = new ArrayList<>();
-        p2ArrayT.add(k3);
         p2ArrayT.add(k4);
         p2ArrayT.add(k5);
+        p2ArrayT.add(k6);
+        p1ArrayT.add(k7);
         ArrayList<Thing> p3ArrayT = new ArrayList<>();
-        p3ArrayT.add(k6);
+        p3ArrayT.add(k8);
         Process p1 = new Process(1, p1ArrayT, new Scheduler());
         Process p2 = new Process(2, p2ArrayT, new Scheduler());
         Process p3 = new Process(3, p3ArrayT, new Scheduler());
 
         k1.setParentProcess(p1);
         k2.setParentProcess(p1);
-        k3.setParentProcess(p2);
+        k3.setParentProcess(p1);
         k4.setParentProcess(p2);
         k5.setParentProcess(p2);
-        k6.setParentProcess(p3);
+        k6.setParentProcess(p2);
+        k7.setParentProcess(p2);
+        k8.setParentProcess(p3);
 
         processArray = new ArrayList<>();
         processArray.add(p1);
@@ -243,7 +254,7 @@ public class MainClass {
             for(Queue<KLT> blockedQ: blockedQueuesArray){
                if(!blockedQ.isEmpty()){
                    //fill matrix
-                   matrix[auxCounter+6][timer] = (char) (blockedQ.peek().getID() + 48);
+                   matrix[auxCounter+totalThreadsCount][timer] = (char) (blockedQ.peek().getID() + 48);
 
                    blockedQ.peek().decreaseTaskTime();
                }
@@ -260,7 +271,7 @@ public class MainClass {
 
                     auxKLT2.decreaseTaskTime();
                     if (!auxKLT2.isTaskTimeCero()) {
-                        auxKLT2.changeState(KLT.KLTSTATE.READY);;
+                        auxKLT2.changeState(KLT.KLTSTATE.READY);
                         readyQueue.add(0, auxKLT2);
                     } else {
                         auxKLT2.getTaskQueue().poll();
@@ -268,6 +279,7 @@ public class MainClass {
                             Task.TASKTYPE auxTT = auxKLT2.getTaskQueue().peek().getTaskType();
                             switch (auxTT) {
                                 case CPU:
+                                    auxKLT2.changeState(KLT.KLTSTATE.READY);
                                     readyQueue.add(0, auxKLT2);
                                     break;
                                 case IO1:
@@ -290,7 +302,7 @@ public class MainClass {
         }
         //Mostrar matriz
         System.out.println("");
-        for (int i=0; i<8; i++){
+        for (int i=0; i<(totalThreadsCount+3); i++){
             for (int j=0; j<50; j++){
                 System.out.printf("%c", matrix[i][j]);
             }
