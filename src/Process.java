@@ -7,12 +7,14 @@ import java.util.Queue;
 
 public class Process extends Thing {
     private ArrayList<Thing> KLTArray;
+    private ArrayList<Thing> KLTQueue;
     private Scheduler scheduler;
 
     public Process(int id, ArrayList<Thing> a, Scheduler s){
         ID = id;
         KLTArray = a;
         scheduler = s;
+        KLTQueue = new ArrayList<>();
     }
 
     public Scheduler getScheduler() {
@@ -20,6 +22,8 @@ public class Process extends Thing {
     }
 
     public ArrayList<Thing> getKLTArray(){ return KLTArray; }
+
+    public ArrayList<Thing> getKLTQueue(){ return KLTQueue; }
 
     public boolean hasReadyKLT(){
         for(Thing klt: KLTArray){
