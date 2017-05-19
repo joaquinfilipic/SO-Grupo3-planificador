@@ -1,6 +1,7 @@
 /**
  * Created by joaquin on 10/05/17.
  */
+
 public class Core {
     private int ID;
     private KLT runningKLT;
@@ -15,6 +16,7 @@ public class Core {
     }
     public KLT getRunningKLT(){ return runningKLT; }
     public KLT getPrevRunning(){ return prevRunning; }
+
     public void assignRunningKLT(KLT klt){
         runningKLT = klt;
     }

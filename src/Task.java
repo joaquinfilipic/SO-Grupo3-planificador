@@ -18,6 +18,7 @@ public class Task {
     public int getTaskTime(){
         return taskTime;
     }
+
     public void decreaseTaskTime(){
         taskTime--;
     }

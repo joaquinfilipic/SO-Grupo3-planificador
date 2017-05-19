@@ -1,11 +1,12 @@
 import java.util.ArrayList;
-import java.util.Queue;
 
 /**
  * Created by joaquin on 10/05/17.
  */
 
 public class Process extends Thing {
+    //KLTArray is a list of all KLTs, KLTQueue is for using in algorithms
+    //Don't know if necessary, but it works
     private ArrayList<Thing> KLTArray;
     private ArrayList<Thing> KLTQueue;
     private Scheduler scheduler;
@@ -25,13 +26,6 @@ public class Process extends Thing {
 
     public ArrayList<Thing> getKLTQueue(){ return KLTQueue; }
 
-    public boolean hasReadyKLT(){
-        for(Thing klt: KLTArray){
-            if( ((KLT)klt).getKltstate() == KLT.KLTSTATE.READY)
-                return true;
-        }
-        return false;
-    }
 
     public boolean allKLTsBlocked(){
         boolean aux = true;
