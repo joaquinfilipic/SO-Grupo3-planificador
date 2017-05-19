@@ -15,6 +15,7 @@ public class MainClass {
     private static int timer;
     private static char[][] matrix;
     private static int totalThreadsCount;
+    private static Scheduler.ALGORITHM processesAlgorithm;
 
     //EXAMPLE
     public static void createEverything(){
@@ -31,6 +32,7 @@ public class MainClass {
         coresArray.add(core2);
         scheduler = new Scheduler();
         totalThreadsCount = 8;
+        processesAlgorithm = Scheduler.ALGORITHM.FIFO;
         matrix = new char[totalThreadsCount+3][50];
         //Empty matrix
         for (int i=0; i<(totalThreadsCount+3); i++){
@@ -58,27 +60,23 @@ public class MainClass {
         k2TaskQ.add(t1K2);
         k2TaskQ.add(t2K2);
         k2TaskQ.add(t3K2);
-        Task t1K3 = new Task(Task.TASKTYPE.CPU, 1);
-        Task t2K3 = new Task(Task.TASKTYPE.CPU, 3);
-        Task t3K3 = new Task(Task.TASKTYPE.IO1, 2);
-        Task t4K3 = new Task(Task.TASKTYPE.CPU, 2);
+        Task t1K3 = new Task(Task.TASKTYPE.CPU, 4);
+        Task t2K3 = new Task(Task.TASKTYPE.IO1, 2);
+        Task t3K3 = new Task(Task.TASKTYPE.CPU, 2);
         Queue<Task> k3TaskQ = new LinkedList<>();
         k3TaskQ.add(t1K3);
         k3TaskQ.add(t2K3);
         k3TaskQ.add(t3K3);
-        k3TaskQ.add(t4K3);
 
-        Task t1K4 = new Task(Task.TASKTYPE.CPU, 2);
-        Task t2K4 = new Task(Task.TASKTYPE.CPU, 2);
-        Task t3K4 = new Task(Task.TASKTYPE.IO2, 1);
-        Task t4K4 = new Task(Task.TASKTYPE.CPU, 1);
+        Task t1K4 = new Task(Task.TASKTYPE.CPU, 4);
+        Task t2K4 = new Task(Task.TASKTYPE.IO2, 1);
+        Task t3K4 = new Task(Task.TASKTYPE.CPU, 1);
         Queue<Task> k4TaskQ = new LinkedList<>();
         k4TaskQ.add(t1K4);
         k4TaskQ.add(t2K4);
         k4TaskQ.add(t3K4);
-        k4TaskQ.add(t4K4);
         Task t1K5 = new Task(Task.TASKTYPE.CPU, 2);
-        Task t2K5 = new Task(Task.TASKTYPE.IO3, 3);
+        Task t2K5 = new Task(Task.TASKTYPE.IO1, 3);
         Task t3K5 = new Task(Task.TASKTYPE.CPU, 1);
         Queue<Task> k5TaskQ = new LinkedList<>();
         k5TaskQ.add(t1K5);
@@ -95,15 +93,13 @@ public class MainClass {
         k6TaskQ.add(t3K6);
         k6TaskQ.add(t4K6);
         k6TaskQ.add(t5K6);
-        Task t1K7 = new Task(Task.TASKTYPE.CPU, 4);
-        Task t2K7 = new Task(Task.TASKTYPE.CPU, 1);
-        Task t3K7 = new Task(Task.TASKTYPE.IO2, 3);
-        Task t4K7 = new Task(Task.TASKTYPE.CPU, 2);
+        Task t1K7 = new Task(Task.TASKTYPE.CPU, 5);
+        Task t2K7 = new Task(Task.TASKTYPE.IO2, 3);
+        Task t3K7 = new Task(Task.TASKTYPE.CPU, 2);
         Queue<Task> k7TaskQ = new LinkedList<>();
         k7TaskQ.add(t1K7);
         k7TaskQ.add(t2K7);
         k7TaskQ.add(t3K7);
-        k7TaskQ.add(t4K7);
 
         Task t1K8 = new Task(Task.TASKTYPE.CPU, 3);
         Task t2K8 = new Task(Task.TASKTYPE.IO3, 2);
@@ -179,7 +175,6 @@ public class MainClass {
                     readyQueue.add(auxKlt);
                     if(!readyProcessQueue.contains(auxKlt.getParentProcess()))
                         readyProcessQueue.add(auxKlt.getParentProcess());
-                    auxKlt.getParentProcess().getKLTQueue().add(auxKlt);
                 }
             }
         }
@@ -188,121 +183,97 @@ public class MainClass {
     public static void main(String[] args){
         createEverything();
 
-
         for(timer = 0; timer < 50; timer++){
-
-            //Auxiliary variables
-            ArrayList<Thing> pArray = new ArrayList<>();
-            //ArrayList<Thing> kltArray = new ArrayList<>();
-            //Process auxP ;
-            //KLT auxKLT ;
-
             checkBlockedQueues();
             checkArrivals();
 
-            System.out.printf("Time %d, klts in ready %d\n", timer, readyQueue.size());
-            //////////////////////////////////////////////////////////////////////
-            //BEGINNING
-            // scheduling
-            //looks for the next process to run.
-            /*for(KLT klt: readyQueue){
-                if(!pArray.contains(klt.getParentProcess()))
-                    pArray.add(klt.getParentProcess());
-            }
-
-            for(Process pr: readyProcessQueue){
-                pArray.add(pr);
-            }*/
-
-            for(KLT klt: readyQueue){
-                pArray.add(klt.getParentProcess());
-            }
-
-            System.out.printf("Time %d, processes in pArray %d\n",timer, pArray.size());
-            int i = 0;
-            int freeCores = coresArray.size();
-            boolean MoreProcesses = false, nextKLT;
-            if(pArray != null)
-                MoreProcesses = true;
-            while ( (i < freeCores) && MoreProcesses ){
-                ArrayList<Thing> kltArray = new ArrayList<>();
-                Process auxP ;
-                KLT auxKLT ;
-                nextKLT = true;
-                auxP = (Process) scheduler.schedule(Scheduler.ALGORITHM.FIFO, pArray);
-                if(auxP == null)
-                    MoreProcesses = false;
+            //Run algorithm for each core
+            for(int n = 0; n < coresArray.size() && coresArray.get(n).isFree(); n++) {
+                ArrayList<Thing> pArray = new ArrayList<>();
+                boolean assigned = false;
+                KLT aux = coresArray.get(n).getPrevRunning();
+                if( aux != null ){
+                    aux.changeState(KLT.KLTSTATE.RUNNING);
+                    coresArray.get(n).assignRunningKLT(aux);
+                    aux.getParentProcess().getKLTQueue().remove(aux);
+                    readyQueue.remove(aux);
+                    System.out.printf("selected core %d\n", aux.getAssignedCore().getID());
+                }
                 else {
-                    System.out.printf("Time %d, selected p %d\n",timer, auxP.getID());
-                    pArray.remove(auxP);
-                    for (Thing klt : auxP.getKLTQueue()) {
-                        if (((KLT) klt).getKltstate() == KLT.KLTSTATE.READY && klt.getArrivalTime() <= timer) {
-                            kltArray.add((KLT) klt);
-                        }
+                    System.out.printf("Time %d, klts in ready %d\n", timer, readyQueue.size());
+                    for (Process p : readyProcessQueue) {
+                        pArray.add(p);
                     }
-                    System.out.printf("Time %d, klts in kltArray %d\n",timer, kltArray.size());
-                    boolean MoreKLTs = false;
-                    if (kltArray != null)
-                        MoreKLTs = true;
-                    while (i < freeCores && MoreKLTs && nextKLT == true) {
-                        auxKLT = (KLT) auxP.getScheduler().schedule(Scheduler.ALGORITHM.FIFO, kltArray);
-                        if (auxKLT == null) {
-                            MoreKLTs = false;
-                        }
+                    System.out.printf("Time %d, processes in pArray %d\n", timer, pArray.size());
+                    boolean MoreProcesses = false;
+                    if (pArray.size() != 0)
+                        MoreProcesses = true;
+                    while (MoreProcesses && assigned == false) {
+                        ArrayList<Thing> kltArray = new ArrayList<>();
+                        Process auxP;
+                        KLT auxKLT;
+                        auxP = (Process) scheduler.schedule(processesAlgorithm, pArray);
+                        if (auxP == null)
+                            MoreProcesses = false;
                         else {
-                            System.out.printf("Time %d, selected klt %d\n",timer, auxKLT.getID());
-                            kltArray.remove(auxKLT);
-                            int j = 0;
-                            boolean alreadyAsigned = false;
-                            while (j < coresArray.size() && i < freeCores && !alreadyAsigned && nextKLT == true) {
-
-                                if ( coresArray.get(j).isFree() && auxKLT.checkCore(coresArray.get(j)) ) {
-                                    auxKLT.changeState(KLT.KLTSTATE.RUNNING);
-                                    coresArray.get(j).assignRunningKLT(auxKLT);
-                                    System.out.printf("Size %d\n", auxKLT.getParentProcess().getKLTQueue().size());
-                                    auxKLT.getParentProcess().getKLTQueue().remove(auxKLT);
-                                    System.out.printf("Size %d\n", auxKLT.getParentProcess().getKLTQueue().size());
-                                    readyQueue.remove(auxKLT);
-                                    alreadyAsigned = true;
-                                    nextKLT = false;
-                                    i++;
-                                    System.out.printf("core %d\n", auxKLT.getAssignedCore().getID());
+                            System.out.printf("Time %d, selected p %d\n", timer, auxP.getID());
+                            pArray.remove(auxP);
+                            for (Thing klt : auxP.getKLTQueue()) {
+                                if (((KLT) klt).getKltstate() == KLT.KLTSTATE.READY && klt.getArrivalTime() <= timer) {
+                                    kltArray.add(klt);
                                 }
-                                j++;
+                            }
+                            System.out.printf("Time %d, klts in kltArray %d\n", timer, kltArray.size());
+                            boolean MoreKLTs = false;
+                            if (kltArray.size() != 0)
+                                MoreKLTs = true;
+                            while (MoreKLTs && assigned == false) {
+                                auxKLT = (KLT) auxP.getScheduler().schedule(Scheduler.ALGORITHM.FIFO, kltArray);
+                                if (auxKLT == null) {
+                                    MoreKLTs = false;
+                                } else {
+                                    System.out.printf("Time %d, selected klt %d\n", timer, auxKLT.getID());
+                                    kltArray.remove(auxKLT);
+                                    if (auxKLT.checkCore(coresArray.get(n))) {
+                                        auxKLT.changeState(KLT.KLTSTATE.RUNNING);
+                                        coresArray.get(n).assignRunningKLT(auxKLT);
+                                        auxKLT.getParentProcess().getKLTQueue().remove(auxKLT);
+                                        readyQueue.remove(auxKLT);
+                                        assigned = true;
+                                        System.out.printf("selected core %d\n", auxKLT.getAssignedCore().getID());
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
-            //END
-            ///////////////////////////////////////////////////////////////////////////
-
             //Decrease time from klts in blocked queues
             int auxCounter = 0;
-            for(Queue<KLT> blockedQ: blockedQueuesArray){
-               if(!blockedQ.isEmpty()){
-                   //fill matrix
-                   matrix[auxCounter+totalThreadsCount][timer] = (char) (blockedQ.peek().getID() + 48);
-
-                   blockedQ.peek().decreaseTaskTime();
-               }
+            for (Queue<KLT> blockedQ : blockedQueuesArray) {
+                if (!blockedQ.isEmpty()) {
+                    //fill matrix
+                    matrix[auxCounter + totalThreadsCount][timer] = (char) (blockedQ.peek().getID() + 48);
+                        blockedQ.peek().decreaseTaskTime();
+                }
                 auxCounter++;
             }
             //fill matrix if any process is running, decrease CPU time and poll if necessary->send to blockedQ
-            for(int k = 0; k < coresArray.size(); k++) {
+            for (int k = 0; k < coresArray.size(); k++) {
                 if (!coresArray.get(k).isFree()) {
-                    System.out.printf("core %d\n", coresArray.get(k).getID());
+                    System.out.printf("running core %d\n", coresArray.get(k).getID());
                     KLT auxKLT2 = coresArray.get(k).getRunningKLT();
                     coresArray.get(k).setRunningKLTNull();
                     //fill matrix
                     matrix[auxKLT2.getID() - 1][timer] = (char) (auxKLT2.getAssignedCore().getID() + 64);
-
                     auxKLT2.decreaseTaskTime();
                     if (!auxKLT2.isTaskTimeCero()) {
+                        coresArray.get(k).assignPrevRunning(auxKLT2);
                         auxKLT2.changeState(KLT.KLTSTATE.READY);
-                        auxKLT2.getParentProcess().getKLTQueue().add(0,auxKLT2);
+                        auxKLT2.getParentProcess().getKLTQueue().add(0, auxKLT2);
                         readyQueue.add(0, auxKLT2);
                     } else {
+                        coresArray.get(k).setPrevRunningNull();
                         auxKLT2.getTaskQueue().poll();
                         if (auxKLT2.getTaskQueue().peek() != null) {
                             Task.TASKTYPE auxTT = auxKLT2.getTaskQueue().peek().getTaskType();
@@ -325,19 +296,23 @@ public class MainClass {
                                     blockedQueuesArray.get(2).add(auxKLT2);
                                     break;
                             }
+                            if(auxKLT2.getParentProcess().allKLTsBlocked()){
+                                System.out.printf("all klts blocked\n");
+                                readyProcessQueue.remove(auxKLT2.getParentProcess());
+                            }
                         }
                     }
                 }
             }
             boolean comp = true;
-            for(int l = 0; l < readyProcessQueue.size() ; l++){
-                for(Thing k:readyProcessQueue.get(0).getKLTQueue()){
-                    if( ((KLT)k).getKltstate() != KLT.KLTSTATE.BLOCKED )
+            for (int l = 0; l < readyProcessQueue.size(); l++) {
+                for (Thing k : readyProcessQueue.get(0).getKLTQueue()) {
+                    if (((KLT) k).getKltstate() != KLT.KLTSTATE.BLOCKED)
                         comp = false;
                 }
-                if(comp){
+                if (comp) {
                     readyProcessQueue.remove(l);
-                    i--;
+                    l--;
                 }
             }
         }

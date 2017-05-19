@@ -33,6 +33,15 @@ public class Process extends Thing {
         return false;
     }
 
+    public boolean allKLTsBlocked(){
+        boolean aux = true;
+        for(Thing k : KLTArray){
+            if ( ((KLT)k).getKltstate() != KLT.KLTSTATE.BLOCKED)
+                aux = false;
+        }
+        return aux;
+    }
+
     public void schedule(Scheduler.ALGORITHM alg){
         scheduler.schedule(Scheduler.ALGORITHM.FIFO, KLTArray);
     }
