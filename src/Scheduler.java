@@ -19,14 +19,11 @@ public class Scheduler {
     public Thing schedule(ALGORITHM alg, ArrayList<Thing> thingsArray){
         if(thingsArray == null || thingsArray.size() == 0)
             return null;
-        if(alg == ALGORITHM.FIFO){
+        if(alg == ALGORITHM.FIFO || alg == ALGORITHM.SRT){
             if(thingsArray.isEmpty()){
                 return null;
             }
             return thingsArray.get(0);
-        }
-        else if(alg == ALGORITHM.SRT){
-            return null;
         }
         else return null;
     }

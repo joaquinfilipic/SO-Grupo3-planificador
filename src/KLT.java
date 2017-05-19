@@ -85,6 +85,18 @@ public class KLT extends Thing {
         return false;
     }
 
+    public int getRemainingTime(){
+        int sum = 0;
+        if (!hasULTs()){
+            for( Task t : taskQueue){
+                if(t.getTaskType() == Task.TASKTYPE.CPU){
+                    sum += t.getTaskTime();
+                }
+            }
+        }
+        return sum;
+    }
+
     public void schedule(Scheduler.ALGORITHM alg) {
         if(scheduler != null){
             scheduler.schedule(Scheduler.ALGORITHM.FIFO, ULTArray);

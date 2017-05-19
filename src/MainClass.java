@@ -32,7 +32,7 @@ public class MainClass {
         coresArray.add(core2);
         scheduler = new Scheduler();
         totalThreadsCount = 8;
-        processesAlgorithm = Scheduler.ALGORITHM.FIFO;
+        processesAlgorithm = Scheduler.ALGORITHM.SRT;
         matrix = new char[totalThreadsCount+3][50];
         //Empty matrix
         for (int i=0; i<(totalThreadsCount+3); i++){
@@ -151,16 +151,35 @@ public class MainClass {
     }
 
     public static void checkArrivals(){
+        boolean arrival = false;
         for(Process p: processArray){
             for(Thing klt: p.getKLTArray()){
                 if(klt.getArrivalTime() == timer) {
                     readyQueue.add((KLT) klt);
-                    if(!readyProcessQueue.contains(p))
+                    if (!readyProcessQueue.contains(p)) {
                         readyProcessQueue.add(p);
+                        arrival = true;
+                    }
                     p.getKLTQueue().add(klt);
                 }
             }
         }
+        if(readyProcessQueue.size() == 3) {
+            System.out.printf("P1: %d, P2: %d, P3: %d\n", readyProcessQueue.get(0).getRemainingTime(), readyProcessQueue.get(1).getRemainingTime(), readyProcessQueue.get(2).getRemainingTime());
+        }
+        if( arrival && processesAlgorithm == Scheduler.ALGORITHM.SRT){
+            for(int i = 0; i < readyProcessQueue.size() - 1; i++){
+                for(int j = i + 1; j < readyProcessQueue.size(); j++){
+                    if(readyProcessQueue.get(i).getRemainingTime() > readyProcessQueue.get(j).getRemainingTime()){
+                        Process auxP = readyProcessQueue.get(i);
+                        Process auxP2 = readyProcessQueue.get(j);
+                        readyProcessQueue.set(i, auxP2);
+                        readyProcessQueue.set(j, auxP);
+                    }
+                }
+            }
+        }
+
     }
     public static void checkBlockedQueues(){
         if(blockedQueuesArray == null)

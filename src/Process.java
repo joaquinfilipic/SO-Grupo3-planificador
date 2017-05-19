@@ -42,6 +42,14 @@ public class Process extends Thing {
         return aux;
     }
 
+    public int getRemainingTime(){
+        int sum = 0;
+        for (Thing klt : KLTArray){
+            sum += ((KLT)klt).getRemainingTime();
+        }
+        return sum;
+    }
+
     public void schedule(Scheduler.ALGORITHM alg){
         scheduler.schedule(Scheduler.ALGORITHM.FIFO, KLTArray);
     }
