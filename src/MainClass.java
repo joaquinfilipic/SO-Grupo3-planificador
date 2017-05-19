@@ -31,8 +31,8 @@ public class MainClass {
         coresArray.add(core1);
         coresArray.add(core2);
         scheduler = new Scheduler();
+        processesAlgorithm = Scheduler.ALGORITHM.FIFO;
         totalThreadsCount = 8;
-        processesAlgorithm = Scheduler.ALGORITHM.SRT;
         matrix = new char[totalThreadsCount+3][50];
         //Empty matrix
         for (int i=0; i<(totalThreadsCount+3); i++){
@@ -164,19 +164,20 @@ public class MainClass {
                 }
             }
         }
-        if(readyProcessQueue.size() == 3) {
-            System.out.printf("P1: %d, P2: %d, P3: %d\n", readyProcessQueue.get(0).getRemainingTime(), readyProcessQueue.get(1).getRemainingTime(), readyProcessQueue.get(2).getRemainingTime());
-        }
         if( arrival && processesAlgorithm == Scheduler.ALGORITHM.SRT){
             for(int i = 0; i < readyProcessQueue.size() - 1; i++){
                 for(int j = i + 1; j < readyProcessQueue.size(); j++){
-                    if(readyProcessQueue.get(i).getRemainingTime() > readyProcessQueue.get(j).getRemainingTime()){
+                    if(readyProcessQueue.get(i).getRemainingTime() >= readyProcessQueue.get(j).getRemainingTime()){
                         Process auxP = readyProcessQueue.get(i);
                         Process auxP2 = readyProcessQueue.get(j);
                         readyProcessQueue.set(i, auxP2);
                         readyProcessQueue.set(j, auxP);
+
                     }
                 }
+            }
+            for(Core c : coresArray) {
+                c.setPrevRunningNull();
             }
         }
 
@@ -315,6 +316,13 @@ public class MainClass {
                                     blockedQueuesArray.get(2).add(auxKLT2);
                                     break;
                             }
+                            if(auxKLT2.getParentProcess().allKLTsBlocked()){
+                                System.out.printf("all klts blocked\n");
+                                readyProcessQueue.remove(auxKLT2.getParentProcess());
+                            }
+                        }
+                        else{
+                            auxKLT2.changeState(KLT.KLTSTATE.BLOCKED); //as finalized
                             if(auxKLT2.getParentProcess().allKLTsBlocked()){
                                 System.out.printf("all klts blocked\n");
                                 readyProcessQueue.remove(auxKLT2.getParentProcess());
