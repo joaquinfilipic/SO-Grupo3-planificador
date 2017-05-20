@@ -10,12 +10,14 @@ public class Process extends Thing {
     private ArrayList<Thing> KLTArray;
     private ArrayList<Thing> KLTQueue;
     private Scheduler scheduler;
+    private Scheduler.ALGORITHM algorithm;
 
     public Process(int id, ArrayList<Thing> a, Scheduler s){
         ID = id;
         KLTArray = a;
         scheduler = s;
         KLTQueue = new ArrayList<>();
+        algorithm = Scheduler.ALGORITHM.FIFO;
     }
 
     public Scheduler getScheduler() {
@@ -26,6 +28,7 @@ public class Process extends Thing {
 
     public ArrayList<Thing> getKLTQueue(){ return KLTQueue; }
 
+    public Scheduler.ALGORITHM getAlgorithm() { return algorithm; }
 
     public boolean allKLTsBlocked(){
         boolean aux = true;

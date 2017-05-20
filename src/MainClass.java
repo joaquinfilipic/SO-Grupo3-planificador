@@ -27,10 +27,10 @@ public class MainClass {
         Core core1 = new Core(1);
         Core core2 = new Core(2);
         coresArray.add(core1);
-        coresArray.add(core2);
+        //coresArray.add(core2);
         scheduler = new Scheduler();
         processesAlgorithm = Scheduler.ALGORITHM.FIFO; //for processes ONLY FIFO or SRT
-        totalThreadsCount = 8; //review later
+        totalThreadsCount = 5; //review later
         matrix = new char[totalThreadsCount+3][50]; //review max amount of time to run
         //Empty matrix -> provisional output
         for (int i=0; i<(totalThreadsCount+3); i++){
@@ -46,120 +46,67 @@ public class MainClass {
         //Example with 3 processes, 8 klts, no ults
         //TASKS
         Task t1K1 = new Task(Task.TASKTYPE.CPU, 3);
-        Task t2K1 = new Task(Task.TASKTYPE.IO1, 1);
-        Task t3K1 = new Task(Task.TASKTYPE.CPU, 2);
         Queue<Task> k1TaskQ = new LinkedList<>();
         k1TaskQ.add(t1K1);
-        k1TaskQ.add(t2K1);
-        k1TaskQ.add(t3K1);
-        Task t1K2 = new Task(Task.TASKTYPE.CPU, 2);
-        Task t2K2 = new Task(Task.TASKTYPE.IO2, 2);
-        Task t3K2 = new Task(Task.TASKTYPE.CPU, 3);
+        Task t1K2 = new Task(Task.TASKTYPE.CPU, 6);
         Queue<Task> k2TaskQ = new LinkedList<>();
         k2TaskQ.add(t1K2);
-        k2TaskQ.add(t2K2);
-        k2TaskQ.add(t3K2);
         Task t1K3 = new Task(Task.TASKTYPE.CPU, 4);
-        Task t2K3 = new Task(Task.TASKTYPE.IO1, 2);
-        Task t3K3 = new Task(Task.TASKTYPE.CPU, 2);
         Queue<Task> k3TaskQ = new LinkedList<>();
         k3TaskQ.add(t1K3);
-        k3TaskQ.add(t2K3);
-        k3TaskQ.add(t3K3);
-
-        Task t1K4 = new Task(Task.TASKTYPE.CPU, 4);
-        Task t2K4 = new Task(Task.TASKTYPE.IO2, 1);
-        Task t3K4 = new Task(Task.TASKTYPE.CPU, 1);
+        Task t1K4 = new Task(Task.TASKTYPE.CPU, 5);
         Queue<Task> k4TaskQ = new LinkedList<>();
         k4TaskQ.add(t1K4);
-        k4TaskQ.add(t2K4);
-        k4TaskQ.add(t3K4);
         Task t1K5 = new Task(Task.TASKTYPE.CPU, 2);
-        Task t2K5 = new Task(Task.TASKTYPE.IO1, 3);
-        Task t3K5 = new Task(Task.TASKTYPE.CPU, 1);
         Queue<Task> k5TaskQ = new LinkedList<>();
         k5TaskQ.add(t1K5);
-        k5TaskQ.add(t2K5);
-        k5TaskQ.add(t3K5);
-        Task t1K6 = new Task(Task.TASKTYPE.CPU, 1);
-        Task t2K6 = new Task(Task.TASKTYPE.IO1, 1);
-        Task t3K6 = new Task(Task.TASKTYPE.CPU, 3);
-        Task t4K6 = new Task(Task.TASKTYPE.IO3, 2);
-        Task t5K6 = new Task(Task.TASKTYPE.CPU, 1);
-        Queue<Task> k6TaskQ = new LinkedList<>();
-        k6TaskQ.add(t1K6);
-        k6TaskQ.add(t2K6);
-        k6TaskQ.add(t3K6);
-        k6TaskQ.add(t4K6);
-        k6TaskQ.add(t5K6);
-        Task t1K7 = new Task(Task.TASKTYPE.CPU, 5);
-        Task t2K7 = new Task(Task.TASKTYPE.IO2, 3);
-        Task t3K7 = new Task(Task.TASKTYPE.CPU, 2);
-        Queue<Task> k7TaskQ = new LinkedList<>();
-        k7TaskQ.add(t1K7);
-        k7TaskQ.add(t2K7);
-        k7TaskQ.add(t3K7);
 
-        Task t1K8 = new Task(Task.TASKTYPE.CPU, 3);
-        Task t2K8 = new Task(Task.TASKTYPE.IO3, 2);
-        Task t3K8 = new Task(Task.TASKTYPE.CPU, 1);
-        Queue<Task> k8TaskQ = new LinkedList<>();
-        k8TaskQ.add(t1K8);
-        k8TaskQ.add(t2K8);
-        k8TaskQ.add(t3K8);
+
+        //ULTs
+        ULT u1 = new ULT(1, 0, k1TaskQ);
+        ULT u2 = new ULT(2, 2, k2TaskQ);
+        ULT u3 = new ULT(3, 4, k3TaskQ);
+        ULT u4 = new ULT(4, 6, k4TaskQ);
+        ULT u5 = new ULT(5, 8, k5TaskQ);
 
         //KLTs
-        KLT k1 = new KLT(1, 0, k1TaskQ);
-        KLT k2 = new KLT(2, 0, k2TaskQ);
-        KLT k3 = new KLT(3, 0, k3TaskQ);
-        KLT k4 = new KLT(4, 0, k4TaskQ);
-        KLT k5 = new KLT(5, 0, k5TaskQ);
-        KLT k6 = new KLT(6, 0, k6TaskQ);
-        KLT k7 = new KLT(7, 0, k7TaskQ);
-        KLT k8 = new KLT(8, 0, k8TaskQ);
+        ArrayList<Thing> k1ArrayT = new ArrayList<>();
+        k1ArrayT.add(u1);
+        k1ArrayT.add(u2);
+        k1ArrayT.add(u3);
+        k1ArrayT.add(u4);
+        k1ArrayT.add(u5);
+
+        KLT k1 = new KLT(1, new Scheduler(), Scheduler.ALGORITHM.RR, k1ArrayT);
+        k1.setQuantum(4);
 
         //PROCESSES
         ArrayList<Thing> p1ArrayT = new ArrayList<>();
         p1ArrayT.add(k1);
-        p1ArrayT.add(k2);
-        p1ArrayT.add(k3);
-        ArrayList<Thing> p2ArrayT = new ArrayList<>();
-        p2ArrayT.add(k4);
-        p2ArrayT.add(k5);
-        p2ArrayT.add(k6);
-        p2ArrayT.add(k7);
-        ArrayList<Thing> p3ArrayT = new ArrayList<>();
-        p3ArrayT.add(k8);
+
         Process p1 = new Process(1, p1ArrayT, new Scheduler());
-        Process p2 = new Process(2, p2ArrayT, new Scheduler());
-        Process p3 = new Process(3, p3ArrayT, new Scheduler());
 
         k1.setParentProcess(p1);
-        k2.setParentProcess(p1);
-        k3.setParentProcess(p1);
-        k4.setParentProcess(p2);
-        k5.setParentProcess(p2);
-        k6.setParentProcess(p2);
-        k7.setParentProcess(p2);
-        k8.setParentProcess(p3);
-
         processArray = new ArrayList<>();
         processArray.add(p1);
-        processArray.add(p2);
-        processArray.add(p3);
     }
 
     public static void checkArrivals(){
         boolean arrival = false;
         for(Process p: processArray){
             for(Thing klt: p.getKLTArray()){
-                if(klt.getArrivalTime() == timer) {
+                if( klt.getArrivalTime() == timer) {
+                    ((KLT)klt).changeState(KLT.KLTSTATE.READY);
                     if (!readyProcessQueue.contains(p)) {
                         readyProcessQueue.add(p);
                         arrival = true;
                     }
                     p.getKLTQueue().add(klt);
                 }
+                if (((KLT)klt).hasULTs()) {
+                    ((KLT) klt).setReadyULTs(timer);
+                }
+
             }
         }
         //only for SRT -> preemptive at arrival
@@ -188,7 +135,13 @@ public class MainClass {
             if(blockedQ != null && !blockedQ.isEmpty()){
                 if(blockedQ.peek().isTaskTimeCero()){
                     KLT auxKlt = blockedQ.poll();
-                    auxKlt.getTaskQueue().poll();
+                    if(!auxKlt.hasULTs()) {
+                        auxKlt.getTaskQueue().poll();
+                    }
+                    else {
+                        auxKlt.getCurrentULT().getTaskQueue().poll();
+                        auxKlt.setCurrentULT(null);
+                    }
                     auxKlt.changeState(KLT.KLTSTATE.READY);
                     auxKlt.getParentProcess().getKLTQueue().add(auxKlt);
                     //this is for blocked processes to return to ready
@@ -237,7 +190,7 @@ public class MainClass {
                             pArray.remove(auxP);
                             //kltArray contains all posible klts to select
                             for (Thing klt : auxP.getKLTQueue()) {
-                                if (((KLT) klt).getKltstate() == KLT.KLTSTATE.READY && klt.getArrivalTime() <= timer) {
+                                if (((KLT) klt).getKltstate() == KLT.KLTSTATE.READY) {
                                     kltArray.add(klt);
                                 }
                             }
@@ -246,7 +199,7 @@ public class MainClass {
                                 MoreKLTs = true;
                             while (MoreKLTs && assigned == false) {
                                 //scheduler selects klt depending on the algorithm -> FIFO for klts
-                                auxKLT = (KLT) auxP.getScheduler().schedule(Scheduler.ALGORITHM.FIFO, kltArray);
+                                auxKLT = (KLT) auxP.getScheduler().schedule(auxP.getAlgorithm(), kltArray);
                                 if (auxKLT == null) {
                                     MoreKLTs = false;
                                 } else {
@@ -278,9 +231,25 @@ public class MainClass {
             for (int k = 0; k < coresArray.size(); k++) {
                 if (!coresArray.get(k).isFree()) {
                     KLT auxKLT2 = coresArray.get(k).getRunningKLT();
+                    ULT auxULT;
                     coresArray.get(k).setRunningKLTNull();
                     //fill matrix
-                    matrix[auxKLT2.getID() - 1][timer] = (char) (auxKLT2.getAssignedCore().getID() + 64);
+                    if(!auxKLT2.hasULTs()) {
+                        matrix[auxKLT2.getID() - 1][timer] = (char) (auxKLT2.getAssignedCore().getID() + 64);
+                    }
+                    else{
+                        ArrayList<Thing> uArray = new ArrayList<>();
+                        for (Thing u : auxKLT2.getULTQueue()){
+                            uArray.add(u);
+                        }
+                        auxULT = (ULT) auxKLT2.getScheduler().schedule(auxKLT2);
+                        auxKLT2.setCurrentULT(auxULT);
+                        //fill matrix... review later
+                        matrix[auxULT.getID() - 1][timer] = (char) (auxKLT2.getAssignedCore().getID() + 64);
+                        auxKLT2.setPrevULTRunning(auxULT);
+                        auxKLT2.increaseWaitingTime();
+                        auxKLT2.decreaseRemainingQ();
+                    }
                     auxKLT2.decreaseTaskTime();
                     //if remaining task time is not 0, that klt remains on running state
                     if (!auxKLT2.isTaskTimeCero()) {
@@ -289,10 +258,25 @@ public class MainClass {
                         auxKLT2.getParentProcess().getKLTQueue().add(0, auxKLT2);
                     } else {
                         coresArray.get(k).setPrevRunningNull();
-                        auxKLT2.getTaskQueue().poll();
-                        if (auxKLT2.getTaskQueue().peek() != null) {
-                            //checks next task type...
-                            Task.TASKTYPE auxTT = auxKLT2.getTaskQueue().peek().getTaskType();
+                        boolean nextTask;
+                        Task.TASKTYPE auxTT = null;
+                        //check if klt has ults
+                        if(!auxKLT2.hasULTs()) {
+                            auxKLT2.getTaskQueue().poll();
+                            nextTask = auxKLT2.getTaskQueue().peek() != null;
+                            if(nextTask){
+                                auxTT = auxKLT2.getTaskQueue().peek().getTaskType();
+                            }
+                        }
+                        else {
+                            auxKLT2.getCurrentULT().getTaskQueue().poll();
+                            nextTask = auxKLT2.getCurrentULT().getTaskQueue().peek() != null;
+                            if(nextTask){
+                                auxTT = auxKLT2.getCurrentULT().getTaskQueue().peek().getTaskType();
+                            }
+                        }
+                        if (auxTT != null) {
+                            //checks next task type
                             switch (auxTT) {
                                 case CPU:
                                     auxKLT2.changeState(KLT.KLTSTATE.READY);
@@ -316,9 +300,27 @@ public class MainClass {
                             }
                         }
                         else{
-                            auxKLT2.changeState(KLT.KLTSTATE.BLOCKED); //as finalized
-                            if(auxKLT2.getParentProcess().allKLTsBlocked()){
-                                readyProcessQueue.remove(auxKLT2.getParentProcess());
+                            if(!auxKLT2.hasULTs()) {
+                                auxKLT2.changeState(KLT.KLTSTATE.BLOCKED); //as finalized
+                                if (auxKLT2.getParentProcess().allKLTsBlocked()) {
+                                    readyProcessQueue.remove(auxKLT2.getParentProcess());
+                                }
+                            }
+                            else {
+                                auxKLT2.setPrevULTRunning(null);
+                                auxKLT2.getULTQueue().remove(auxKLT2.getCurrentULT());
+                                auxKLT2.setRemainingQ(auxKLT2.getQuantum());
+                                if(auxKLT2.getULTQueue().size() != 0) {
+                                    coresArray.get(k).assignPrevRunning(auxKLT2);
+                                    auxKLT2.changeState(KLT.KLTSTATE.READY);
+                                    auxKLT2.getParentProcess().getKLTQueue().add(0, auxKLT2);
+                                }
+                                else{
+                                    auxKLT2.changeState(KLT.KLTSTATE.BLOCKED); //as finalized
+                                    if (auxKLT2.getParentProcess().allKLTsBlocked()) {
+                                        readyProcessQueue.remove(auxKLT2.getParentProcess());
+                                    }
+                                }
                             }
                         }
                     }

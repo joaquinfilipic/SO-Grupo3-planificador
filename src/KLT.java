@@ -6,34 +6,47 @@ import java.util.Queue;
  */
 
 public class KLT extends Thing {
-    public enum KLTSTATE { BLOCKED, READY, RUNNING}
+    public enum KLTSTATE { NEW, BLOCKED, READY, RUNNING}
     private KLTSTATE kltstate;
     private Process parentProcess;
     private Scheduler scheduler;
-    private ArrayList<Thing> ULTArray;
+    private Scheduler.ALGORITHM algorithm;
+    private ArrayList<Thing> ULTArray, ULTQueue;
     private Queue<Task> taskQueue;
     private Core assignedCore;
+    private ULT currentULT, prevULTRunning;
+    private int quantum; //default quantum time = 1
+    private int remainingQ;
 
-    public KLT(int id, int AT, Scheduler s, ArrayList<Thing> a){
+    public KLT(int id, Scheduler s, Scheduler.ALGORITHM alg, ArrayList<Thing> a){
         ID = id;
-        kltstate = KLTSTATE.READY;
-        arrivalTime = AT;
+        kltstate = KLTSTATE.NEW;
         scheduler = s;
+        algorithm = alg;
+        quantum = 1;
+        remainingQ = quantum;
         ULTArray = a;
+        ULTQueue = new ArrayList<>();
         taskQueue = null;
+        currentULT = null;
+        prevULTRunning = null;
+        arrivalTime = ULTArray.get(0).getArrivalTime();
+        for(Thing u : ULTArray){
+            int n = ((ULT)u).getArrivalTime();
+            if(n < arrivalTime){
+                arrivalTime = n;
+            }
+        }
     }
     public KLT(int id, int AT, Queue<Task> TQ){
         ID = id;
-        kltstate = KLTSTATE.READY;
+        kltstate = KLTSTATE.NEW;
         arrivalTime = AT;
         taskQueue = TQ;
         scheduler = null;
         ULTArray = null;
     }
 
-    public void setParentProcess(Process p){
-        parentProcess = p;
-    }
 
     public Process getParentProcess(){ return parentProcess; }
 
@@ -45,9 +58,43 @@ public class KLT extends Thing {
         return scheduler;
     }
 
+    public ArrayList<Thing> getULTArray() { return ULTArray; }
+
+    public ArrayList<Thing> getULTQueue() { return ULTQueue; }
+
     public Core getAssignedCore(){ return assignedCore; }
 
     public KLTSTATE getKltstate(){ return kltstate; }
+
+    public Scheduler.ALGORITHM getAlgorithm() { return algorithm; }
+
+    public ULT getCurrentULT() { return currentULT; }
+
+    public ULT getPrevULTRunning() { return prevULTRunning; }
+
+    public int getQuantum() { return quantum; }
+
+    public int getRemainingQ() { return remainingQ; }
+
+    @Override
+    public int getArrivalTime(){
+        if(!hasULTs()){
+            return arrivalTime;
+        }
+        else {
+            int min = ULTArray.get(0).getArrivalTime();
+            for(Thing u : ULTArray){
+                if( min > u.getArrivalTime()){
+                    min = u.getArrivalTime();
+                }
+            }
+            return min;
+        }
+    }
+
+    public void setParentProcess(Process p){
+        parentProcess = p;
+    }
 
     public void changeState(KLTSTATE s){
         kltstate = s;
@@ -56,6 +103,16 @@ public class KLT extends Thing {
     public void assignCore(Core c){
         assignedCore = c;
     }
+
+    public void setCurrentULT(ULT u) { currentULT = u; }
+
+    public void setPrevULTRunning(ULT u) { prevULTRunning = u; }
+
+    public void setQuantum(int i) { quantum = i; }
+
+    public void setRemainingQ(int i) { remainingQ = i; }
+
+    public void decreaseRemainingQ() { remainingQ--; }
 
     public boolean checkCore(Core c){
         if(assignedCore == null){
@@ -77,24 +134,66 @@ public class KLT extends Thing {
         if(!hasULTs()){
             taskQueue.peek().decreaseTaskTime();
         }
+        else {
+            currentULT.decreaseTaskTime();
+        }
     }
     public boolean isTaskTimeCero(){
         if(!hasULTs()){
             return taskQueue.peek().isTaskTimeCero();
         }
-        return false;
+        else {
+            return currentULT.isTaskTimeCero();
+        }
     }
 
     public int getRemainingTime(){
         int sum = 0;
-        if (!hasULTs()){
-            for( Task t : taskQueue){
-                if(t.getTaskType() == Task.TASKTYPE.CPU){
-                    sum += t.getTaskTime();
+        if(kltstate != KLTSTATE.NEW) {
+            if (!hasULTs()) {
+                for (Task t : taskQueue) {
+                    if (t.getTaskType() == Task.TASKTYPE.CPU) {
+                        sum += t.getTaskTime();
+                    }
+                }
+            } else {
+                for (Thing ult : ULTArray) {
+                    sum += ((ULT) ult).getRemainingTime();
                 }
             }
         }
         return sum;
+    }
+
+    public void increaseWaitingTime(){
+        for(Thing ult : ULTQueue){
+            if ( !((ULT)ult).equals(currentULT) ){
+                ((ULT)ult).increaseWaitingTime();
+            }
+        }
+    }
+
+    public void setReadyULTs(int t){
+        for (Thing ult : ULTArray){
+            if(ult.getArrivalTime() == t){
+                ((ULT)ult).changeULTState(ULT.ULTSTATE.READY);
+                ULTQueue.add(ult);
+                //Only for SRT -> Preemptive at arrival
+                if(algorithm == Scheduler.ALGORITHM.SRT){
+                    for(int i = 0; i < ULTQueue.size() - 1; i++){
+                        for(int j = i + 1; j < ULTQueue.size(); j++){
+                            if(((ULT)ULTQueue.get(i)).getRemainingTime() >= ((ULT)ULTQueue.get(j)).getRemainingTime()){
+                                ULT auxU = (ULT)ULTQueue.get(i);
+                                ULT auxU2 = (ULT)ULTQueue.get(j);
+                                ULTQueue.set(i, auxU2);
+                                ULTQueue.set(j, auxU);
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void schedule(Scheduler.ALGORITHM alg) {
