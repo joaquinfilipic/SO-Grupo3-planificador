@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by joaquin on 10/05/17.
@@ -89,6 +93,108 @@ public class MainClass {
         k1.setParentProcess(p1);
         processArray = new ArrayList<>();
         processArray.add(p1);
+    }
+
+    public static void readFile() {
+        BufferedReader in = new BufferedReader(new FileReader("input.txt"));
+        String line;
+        Integer lineNum = 0;
+        Integer ULTid = 0;
+
+        Map<String, Scheduler.ALGORITHM> algorithms = new HashMap<>();
+        algorithms.put('FIFO', Scheduler.ALGORITHM.FIFO);
+        algorithms.put('SRT', Scheduler.ALGORITHM.SRT);
+        algorithms.put('RR', Scheduler.ALGORITHM.RR);
+        algorithms.put('SPN', Scheduler.ALGORITHM.SPN);
+        algorithms.put('HRRN', Scheduler.ALGORITHM.HRRN);
+
+        Scheduler.ALGORITHM[3] algorithmsList;
+        Integer[3] quantumsList;
+
+        Map<String, Task.TASKTYPE> tasktypes = new HashMap<>();
+        algorithms.put('CPU', Scheduler.ALGORITHM.CPU);
+        algorithms.put('IO1', Scheduler.ALGORITHM.IO1);
+        algorithms.put('IO2', Scheduler.ALGORITHM.IO2);
+        algorithms.put('IO3', Scheduler.ALGORITHM.IO3);
+
+        ULT u5 = new ULT(5, 8, k5TaskQ);
+
+        //KLTs
+        ArrayList<Thing> k1ArrayT = new ArrayList<>();
+        k1ArrayT.add(u1);
+        k1ArrayT.add(u2);
+        k1ArrayT.add(u3);
+        k1ArrayT.add(u4);
+        k1ArrayT.add(u5);
+
+        KLT k1 = new KLT(1, new Scheduler(), Scheduler.ALGORITHM.RR, k1ArrayT);
+        k1.setQuantum(4);
+
+        //PROCESSES
+        ArrayList<Thing> p1ArrayT = new ArrayList<>();
+        p1ArrayT.add(k1);
+
+        Process p1 = new Process(1, p1ArrayT, new Scheduler());
+
+        k1.setParentProcess(p1);
+
+        processArray = new ArrayList<>();
+        
+
+        processArray.add(p1);
+
+        // Loop through lines
+        while((line = in.readLine()) != null) {
+
+            // Detect algorithms and quantum for executables
+            if ( lineNum == 0 || lineNum == 1 || lineNum == 2 ) {
+                algorithms.forEach((k,v) -> line.contains(k) ? algorithmsList[lineNum] = v : null);
+                String quantum = line.split("Q")[1];
+                if (quantum != null) quantumsList[lineNum] = Integer.parseInt(quantum);
+
+                lineNum = lineNum + 1;
+                continue;
+            }
+            
+            if (line[0] == 'U') {
+                Queue<Task> taskQueue = new LinkedList<>();
+                Integer idx = 0;
+                Integer arrival = 0;
+
+                line.split(",").forEach((value) -> {
+                    // Load arrival from first field
+                    String field = value.trim();
+                    if (idx == 0) {
+                        return arrival = Integer.parse(field.split(" ")[1]);
+                    }
+
+                    // Parse line into task queue                    
+                    String[] raw = field.split(" ");
+                    Integer amount = Integer.parseInt(raw[0]);
+                    String strType = raw[1];
+                    Task.TASKTYPE tasktype;
+                    tasktypes.forEach((k,v) -> strType == k ? taskType = v : null );
+
+                    // Add task to task queue
+                    taskQueue.add(new Task(tasktype, amount));
+
+                    idx = idx + 1;
+                });
+                
+                ULT u = new ULT(ULTid, arrival, taskQueue);
+                ULTid = ULTid + 1;
+            }
+
+
+
+
+
+
+            lineNum = lineNum + 1;
+        }
+
+        // Close file
+        in.close();
     }
 
     public static void checkArrivals(){

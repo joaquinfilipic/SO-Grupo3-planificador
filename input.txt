@@ -1,0 +1,28 @@
+P: FIFO
+KLT: RR Q4
+ULT: RR Q3
+
+P
+K
+U 12, 12 CPU, 12 IO1, 14 CPU, 24 IO2
+
+
+
+
+
+
+
+FORMAT:
+
+|: One or the other
+?: Optional
+<>: Field to fill
+{}{N TIMES}: Repeat on the same line as many times as desired
+
+P: <FIFO|SRT> 
+KLT: <ALGORITHM> Q?<QUANTUM> 
+ULT: <ALGORITHM> Q?<QUANTUM>
+
+P
+K
+U <ARRIVAL> {, <AMOUNT> <CPU|IO1|IO2|IO3>}{N TIMES}
