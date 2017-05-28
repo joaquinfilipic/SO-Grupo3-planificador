@@ -51,7 +51,7 @@ public class MainClass {
         scheduler = new Scheduler();
 
         // Create data from parsed input JSON
-        Parser parser = new Parser("./input.txt");
+        Parser parser = new Parser("./input/input.json");
         coresArray = parser.getCores();
         processesAlgorithm = parser.getProcessAlgorithm();
         processArray = parser.getProcesses();

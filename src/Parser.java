@@ -163,10 +163,10 @@ public class Parser {
             klt = new KLT(id, arrival, tasks);
         } else {
             ArrayList<Thing> ults = this.parseULTs(rawULTs);
-            klt = new KLT(id, new Scheduler(), this.KLTAlgorithm.getType(), ults);
+            klt = new KLT(id, new Scheduler(), this.ULTAlgorithm.getType(), ults);
         }
 
-        if (this.KLTAlgorithm.hasQuantum()) klt.setQuantum(this.KLTAlgorithm.getQuantum());
+        if (this.ULTAlgorithm.hasQuantum()) klt.setQuantum(this.ULTAlgorithm.getQuantum());
         return klt;
     }
 
