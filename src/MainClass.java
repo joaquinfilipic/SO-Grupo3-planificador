@@ -16,6 +16,9 @@ public class MainClass {
     private static int totalThreadsCount;
     private static Scheduler.ALGORITHM processesAlgorithm;
 
+    public static void MatrixToJson() {
+
+    }
     //EXAMPLE
     public static void createEverything(){
         readyProcessQueue = new ArrayList<>();
@@ -334,12 +337,31 @@ public class MainClass {
             }
         }
         //Show matrix
+        System.out.println("[");
+        for(Process process : processArray) {
+            System.out.print("\t{ name: 'proc" + process.getID() + "', klts: [");
+            for(Thing klt : process.getKLTArray()) {
+                System.out.print("{ name: 'klt" + klt.getID() + "', ults: [");
+                for(Thing ult : ((KLT)klt).getULTArray()) {
+                    System.out.print("{ name: 'ult" + ult.getID() + "'},");
+                }
+                System.out.print("]},");
+            }
+            System.out.println("]},");
+        }
+        System.out.println("]");
+
+        System.out.println("Gantt:");
+        System.out.printf("[");
         System.out.println("");
         for (int i=0; i<(totalThreadsCount+3); i++){
+            System.out.printf("[");
             for (int j=0; j<50; j++){
-                System.out.printf("%c", matrix[i][j]);
+                System.out.printf("'%c',", matrix[i][j]);
             }
+            System.out.printf("],");
             System.out.println("");
         }
+        System.out.printf("]");
     }
 }
