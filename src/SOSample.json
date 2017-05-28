@@ -1,0 +1,38 @@
+{
+  "cpu": 2,
+  "timeline": 50,
+  "processAlgorithm": {
+    "name": "RR",
+    "quantum": 2
+  },
+  "KLTAlgorithm": {
+    "name": "FIFO",
+    "quantum": null
+  },
+  "ULTAlgorithm": {
+    "name": "HRRN",
+    "quantum": null
+  },
+  "tasks": [{
+    "process": {
+      "arrival": 0,
+      "id": 1,
+      "klts": [{
+        "id": 1,
+        "arrival": 0,
+        "ults": null,
+        "tasks": [{ "time": 10, "type": "CPU"}]
+      },
+      {
+        "id": 2,
+        "arrival": 2,
+        "ults": [{
+          "id": 2,
+          "arrival": 2,
+          "tasks": [{ "time": 10, "type": "CPU"}]
+        }],
+        "tasks": null
+      }]
+    }
+  }]
+}

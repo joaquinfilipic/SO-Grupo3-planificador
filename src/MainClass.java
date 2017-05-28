@@ -39,7 +39,20 @@ public class MainClass {
             }
         }
         createProcessesKLTsAndTasks(); //provisional input
+    }
 
+    public static void loadInput() {
+        readyProcessQueue = new ArrayList<>();
+        blockedQueuesArray = new ArrayList<>();
+        blockedQueuesArray.add(new LinkedList<>());
+        blockedQueuesArray.add(new LinkedList<>());
+        blockedQueuesArray.add(new LinkedList<>());
+        scheduler = new Scheduler();
+
+        Parser parser = new Parser("./input.txt");
+        coresArray = parser.getCores();
+        processesAlgorithm = parser.getProcessAlgorithm();
+        processArray = parser.getProcesses();
     }
 
     public static void createProcessesKLTsAndTasks(){
