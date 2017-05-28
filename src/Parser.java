@@ -20,6 +20,7 @@ public class Parser {
     private Algorithm KLTAlgorithm;
     private Algorithm ULTAlgorithm;
     private Integer timeline;
+    private Integer totalThreads;
     private ArrayList<Process> processes;
 
     private class Algorithm {
@@ -46,6 +47,11 @@ public class Parser {
 
     public Parser (String filename) {
         this.filename = filename;
+        this.totalThreads = 0;
+    }
+
+    public Integer getTotalThreads() {
+        return totalThreads;
     }
 
     public ArrayList<Core> getCores() {
@@ -58,6 +64,10 @@ public class Parser {
 
     public Scheduler.ALGORITHM getProcessAlgorithm() {
         return processAlgorithm.getType();
+    }
+
+    public Integer getTimeline() {
+        return timeline;
     }
 
     private void loadCores (Integer cores) {
@@ -124,6 +134,7 @@ public class Parser {
         Integer arrival = (Integer) rawULT.get("arrival");
         Integer id = (Integer) rawULT.get("id");
         Queue<Task> tasks = this.parseTasks((JSONArray) rawULT.get("tasks"));
+        totalThreads = totalThreads + 1;
 
         return new ULT(id, arrival, tasks);
     }
@@ -147,6 +158,7 @@ public class Parser {
         KLT klt;
 
         if (rawULTs == null) {
+            totalThreads = totalThreads + 1;
             Queue<Task> tasks = this.parseTasks((JSONArray) rawKLT.get("tasks"));
             klt = new KLT(id, arrival, tasks);
         } else {

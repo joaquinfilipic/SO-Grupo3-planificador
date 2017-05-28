@@ -41,7 +41,8 @@ public class MainClass {
         createProcessesKLTsAndTasks(); //provisional input
     }
 
-    public static void loadInput() {
+    public static Integer loadInput() {
+        // Create inner structures
         readyProcessQueue = new ArrayList<>();
         blockedQueuesArray = new ArrayList<>();
         blockedQueuesArray.add(new LinkedList<>());
@@ -49,10 +50,23 @@ public class MainClass {
         blockedQueuesArray.add(new LinkedList<>());
         scheduler = new Scheduler();
 
+        // Create data from parsed input JSON
         Parser parser = new Parser("./input.txt");
         coresArray = parser.getCores();
         processesAlgorithm = parser.getProcessAlgorithm();
         processArray = parser.getProcesses();
+        totalThreadsCount = parser.getTotalThreads();
+
+        // Initialize output matrix
+        matrix = new char[totalThreadsCount+3][parser.getTimeline()];
+        //Empty matrix -> provisional output
+        for (int i=0; i<(totalThreadsCount+3); i++){
+            for (int j=0; j<parser.getTimeline(); j++){
+                matrix[i][j] = ' ';
+            }
+        }
+
+        return parser.getTimeline();
     }
 
     public static void createProcessesKLTsAndTasks(){
@@ -166,10 +180,10 @@ public class MainClass {
     }
 
     public static void main(String[] args){
-        createEverything();
+        Integer timeline = loadInput();
 
         //general timer
-        for(timer = 0; timer < 50; timer++){
+        for(timer = 0; timer < timeline; timer++){
             checkBlockedQueues();
             checkArrivals();
 
