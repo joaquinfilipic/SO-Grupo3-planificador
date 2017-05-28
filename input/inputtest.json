@@ -1,0 +1,46 @@
+{
+  "cpu": 1,
+  "timeline": 50,
+  "processAlgorithm": {
+    "name": "FIFO",
+    "quantum": null
+  },
+  "KLTAlgorithm": {
+    "name": "FIFO",
+    "quantum": null
+  },
+  "ULTAlgorithm": {
+    "name": "RR",
+    "quantum": 4
+  },
+  "tasks": [{
+    "arrival": 0,
+    "id": 1,
+    "klts": [{
+      "id": 1,
+      "arrival": 0,
+      "ults": null,
+      "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO1"}, {"time": 4, "type": "CPU"}]
+    }, {
+      "id": 2,
+      "arrival": 0,
+      "ults": null,
+      "tasks": [{ "time": 5, "type": "CPU"}, { "time": 2, "type": "IO2"}, {"time": 3, "type": "CPU"}]
+    }]
+  },
+    {
+      "arrival": 0,
+      "id": 3,
+      "klts": [{
+        "id": 3,
+        "arrival": 0,
+        "ults": null,
+        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO1"}, {"time": 4, "type": "CPU"}]
+      }, {
+        "id": 4,
+        "arrival": 0,
+        "ults": null,
+        "tasks": [{ "time": 5, "type": "CPU"}, { "time": 2, "type": "IO2"}, {"time": 3, "type": "CPU"}]
+      }]
+    }]
+}
