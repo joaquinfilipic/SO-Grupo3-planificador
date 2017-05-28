@@ -1,4 +1,5 @@
 import java.io.FileReader;
+import java.io.File;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -19,15 +20,15 @@ public class Parser {
     private Algorithm processAlgorithm;
     private Algorithm KLTAlgorithm;
     private Algorithm ULTAlgorithm;
-    private Integer timeline;
-    private Integer totalThreads;
+    private long timeline;
+    private long totalThreads;
     private ArrayList<Process> processes;
 
     private class Algorithm {
         private Scheduler.ALGORITHM type;
-        private Integer quantum;
+        private Long quantum;
 
-        public Algorithm(Scheduler.ALGORITHM type, Integer quantum) {
+        public Algorithm(Scheduler.ALGORITHM type, Long quantum) {
             this.type = type;
             this.quantum = quantum;
         }
@@ -36,7 +37,7 @@ public class Parser {
             return this.type;
         }
 
-        public Integer getQuantum() {
+        public long getQuantum() {
             return this.quantum;
         }
 
@@ -50,7 +51,7 @@ public class Parser {
         this.totalThreads = 0;
     }
 
-    public Integer getTotalThreads() {
+    public long getTotalThreads() {
         return totalThreads;
     }
 
@@ -66,11 +67,11 @@ public class Parser {
         return processAlgorithm.getType();
     }
 
-    public Integer getTimeline() {
+    public long getTimeline() {
         return timeline;
     }
 
-    private void loadCores (Integer cores) {
+    private void loadCores (long cores) {
         for (int i = 1; i<= cores; i++) this.cores.add(new Core(i));
     }
 
@@ -98,24 +99,24 @@ public class Parser {
     private void loadAlgorithms(JSONObject obj) {
         JSONObject rawAlgorithm =(JSONObject) obj.get("processAlgorithm");
         Scheduler.ALGORITHM alg = getAlgorithmFromString((String) rawAlgorithm.get("name"));
-        Integer quantum = (Integer) rawAlgorithm.get("quantum");
+        Long quantum = (Long) rawAlgorithm.get("quantum");
         this.processAlgorithm = new Algorithm(alg, quantum);
 
         rawAlgorithm =(JSONObject) obj.get("KLTAlgorithm");
         alg = getAlgorithmFromString((String) rawAlgorithm.get("name"));
-        quantum = (Integer) rawAlgorithm.get("quantum");
+        quantum = (Long) rawAlgorithm.get("quantum");
         this.KLTAlgorithm = new Algorithm(alg, quantum);
 
         rawAlgorithm =(JSONObject) obj.get("ULTAlgorithm");
         alg = getAlgorithmFromString((String) rawAlgorithm.get("name"));
-        quantum = (Integer) rawAlgorithm.get("quantum");
+        quantum = (Long) rawAlgorithm.get("quantum");
         this.ULTAlgorithm = new Algorithm(alg, quantum);
     }
 
     private Task parseTask (JSONObject rawTask) {
         Task.TASKTYPE tasktype  = getTasktypeFromString((String) rawTask.get("type"));
-        Integer time = (Integer) rawTask.get("time");
-        return new Task(tasktype, time);
+        long time = (long) rawTask.get("time");
+        return new Task(tasktype, (int) time);
     }
 
     private Queue<Task> parseTasks (JSONArray rawTasks) {
@@ -131,12 +132,12 @@ public class Parser {
     }
 
     private ULT parseULT (JSONObject rawULT) {
-        Integer arrival = (Integer) rawULT.get("arrival");
-        Integer id = (Integer) rawULT.get("id");
+        long arrival = (long) rawULT.get("arrival");
+        long id = (long) rawULT.get("id");
         Queue<Task> tasks = this.parseTasks((JSONArray) rawULT.get("tasks"));
         totalThreads = totalThreads + 1;
 
-        return new ULT(id, arrival, tasks);
+        return new ULT((int) id, (int) arrival, tasks);
     }
 
     private ArrayList<Thing> parseULTs (JSONArray rawULTs) {
@@ -152,21 +153,21 @@ public class Parser {
     }
 
     private KLT parseKLT (JSONObject rawKLT) {
-        Integer arrival = (Integer) rawKLT.get("arrival");
-        Integer id = (Integer) rawKLT.get("id");
+        long arrival = (long) rawKLT.get("arrival");
+        long id = (long) rawKLT.get("id");
         JSONArray rawULTs = (JSONArray) rawKLT.get("ults");
         KLT klt;
 
         if (rawULTs == null) {
             totalThreads = totalThreads + 1;
             Queue<Task> tasks = this.parseTasks((JSONArray) rawKLT.get("tasks"));
-            klt = new KLT(id, arrival, tasks);
+            klt = new KLT((int) id,(int) arrival, tasks);
         } else {
             ArrayList<Thing> ults = this.parseULTs(rawULTs);
-            klt = new KLT(id, new Scheduler(), this.ULTAlgorithm.getType(), ults);
+            klt = new KLT((int)id, new Scheduler(), this.ULTAlgorithm.getType(), ults);
         }
 
-        if (this.ULTAlgorithm.hasQuantum()) klt.setQuantum(this.ULTAlgorithm.getQuantum());
+        if (this.ULTAlgorithm.hasQuantum()) klt.setQuantum((int) this.ULTAlgorithm.getQuantum());
         return klt;
     }
 
@@ -183,11 +184,11 @@ public class Parser {
     }
 
     private Process parseProcess(JSONObject rawProcess) {
-        Integer arrival = (Integer) rawProcess.get("arrival");
-        Integer id = (Integer) rawProcess.get("id");
+        long arrival = (long) rawProcess.get("arrival");
+        long id = (long) rawProcess.get("id");
         ArrayList<Thing> klts = this.parseKLTs((JSONArray) rawProcess.get("klts"));
 
-        return new Process(id, klts, new Scheduler());
+        return new Process((int) id, klts, new Scheduler());
     }
 
     private ArrayList<Process> parseProcesses(JSONArray tasks) {
@@ -195,7 +196,7 @@ public class Parser {
         ArrayList<Process> processes = new ArrayList<>();
 
         while (processIt.hasNext()) {
-            JSONObject rawProcess = processIt.next();
+            JSONObject rawProcess = (JSONObject) processIt.next();
             Process process = this.parseProcess(rawProcess);
 
             for(Thing thing: process.getKLTArray()) {
@@ -214,12 +215,12 @@ public class Parser {
 
         try {
 
-            Object obj = parser.parse(new FileReader(filename));
+            Object obj = parser.parse(new FileReader(new File("").getAbsolutePath().concat(filename)));
             JSONObject jsonObject = (JSONObject) obj;
 
             // Load from root cores, timeline and algorithms.
-            this.loadCores((Integer) jsonObject.get("cpu"));
-            this.timeline = (Integer) jsonObject.get("timeline");
+            this.loadCores((long) jsonObject.get("cpu"));
+            this.timeline = (long) jsonObject.get("timeline");
             this.loadAlgorithms(jsonObject);
 
             // Parse executables

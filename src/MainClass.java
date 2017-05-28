@@ -51,14 +51,15 @@ public class MainClass {
         scheduler = new Scheduler();
 
         // Create data from parsed input JSON
-        Parser parser = new Parser("./input/input.json");
+        Parser parser = new Parser("/input/input.json");
+        parser.parse();
         coresArray = parser.getCores();
         processesAlgorithm = parser.getProcessAlgorithm();
         processArray = parser.getProcesses();
-        totalThreadsCount = parser.getTotalThreads();
+        totalThreadsCount = (int) parser.getTotalThreads();
 
         // Initialize output matrix
-        matrix = new char[totalThreadsCount+3][parser.getTimeline()];
+        matrix = new char[totalThreadsCount+3][(int) parser.getTimeline()];
         //Empty matrix -> provisional output
         for (int i=0; i<(totalThreadsCount+3); i++){
             for (int j=0; j<parser.getTimeline(); j++){
@@ -66,7 +67,7 @@ public class MainClass {
             }
         }
 
-        return parser.getTimeline();
+        return (int) parser.getTimeline();
     }
 
     public static void createProcessesKLTsAndTasks(){
