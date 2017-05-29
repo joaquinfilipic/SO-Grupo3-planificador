@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.io.PrintWriter;
 
 /**
  * Created by joaquin on 28/05/17.
@@ -51,21 +52,25 @@ public class Log {
         return false;
     }
 
-    public void showLog(){
-        System.out.printf("Time: %d\n", time);
-        System.out.printf("  READY PROCESS QUEUE:\n");
+    public String toString() {
+        return ((Integer) time).toString();
+    }
+
+    public void showLog(PrintWriter file){
+        file.printf("Time: %d\n", time);
+        file.printf("  READY PROCESS QUEUE:\n");
         for(Process p : readyProcessQueue){
-            System.out.printf("    Process ID: %d\n",p.getID());
+            file.printf("    Process ID: %d\n",p.getID());
         }
         for(int i = 0; i < blockedQueuesArray.size(); i++){
-            System.out.printf("  BLOCKED QUEUE %d:\n", i+1);
+            file.printf("  BLOCKED QUEUE %d:\n", i+1);
             for(KLT k : blockedQueuesArray.get(i)){
-                System.out.printf("    KLT ID: %d\n",k.getID());
+                file.printf("    KLT ID: %d\n",k.getID());
             }
         }
         for(KLT k : runningKLTsArray){
-            System.out.printf("  RUNNING IN CORE %d:\n", k.getAssignedCore().getID());
-            System.out.printf("    KLT ID: %d\n",k.getID());
+            file.printf("  RUNNING IN CORE %d:\n", k.getAssignedCore().getID());
+            file.printf("    KLT ID: %d\n",k.getID());
         }
     }
 }

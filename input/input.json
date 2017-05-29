@@ -1,6 +1,6 @@
 {
   "cpu": 2,
-  "timeline": 50,
+  "timeline": 190,
   "processAlgorithm": {
     "name": "FIFO",
     "quantum": null
@@ -11,7 +11,7 @@
   },
   "ULTAlgorithm": {
     "name": "RR",
-    "quantum": 2
+    "quantum": 4
   },
   "tasks": [{
     "arrival": 0,
@@ -19,33 +19,52 @@
     "klts": [{
       "id": 1,
       "arrival": 0,
-      "ults": [{
-        "id": 1,
-        "arrival": 0,
-        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO1"}, {"time": 4, "type": "CPU"}]
-      }, {
-        "id": 2,
-        "arrival": 4,
-        "tasks": [{ "time": 3, "type": "CPU"}, { "time": 3, "type": "IO2"}, {"time": 5, "type": "CPU"}]
-      }],
-      "tasks": null
-    }]},
-    {
+      "ults": null,
+      "tasks": [{"type": "CPU", "time": 3}, { "type": "IO1", "time": 1}, {"type": "CPU", "time": 2 }]
+    }]
+  }, {
     "arrival": 0,
-    "id": 3,
+    "id": 2,
     "klts": [{
-      "id": 3,
+      "id": 2,
+      "arrival": 3,
+      "ults": null,
+      "tasks": [{"type": "CPU", "time": 2}, { "type": "IO2", "time": 2}, {"type": "CPU", "time": 3 }]
+    }, {
+    "arrival": 8,
+    "id": 3,
+    "ults": null,
+    "tasks": [{"type": "CPU", "time": 4}, { "type": "IO1", "time": 2}, {"type": "CPU", "time": 2 }]
+    }]  
+  }, {
+    "arrival": 0,
+    "id": 4,
+    "klts": [{
+      "id": 4,
       "arrival": 0,
+      "tasks": null,
       "ults": [{
-        "id": 3,
-        "arrival": 0,
-        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO1"}, {"time": 4, "type": "CPU"}]
-      }, {
         "id": 4,
+        "arrival": 0,
+        "tasks": [{"type": "CPU", "time": 4}, { "type": "IO2", "time": 1}, {"type": "CPU", "time": 1 }]
+      }, {
+        "id": 5,
+        "arrival": 2,
+        "tasks": [{"type": "CPU", "time": 2}, { "type": "IO1", "time": 3}, {"type": "CPU", "time": 1 }]
+      }]  
+    }, {
+      "id": 6,
+      "arrival": 0,
+      "tasks": null,
+      "ults" : [{
+        "id": 6,
         "arrival": 4,
-        "tasks": [{ "time": 3, "type": "CPU"}, { "time": 3, "type": "IO2"}, {"time": 5, "type": "CPU"}]
-      }],
-      "tasks": null
+        "tasks": [{"type": "CPU", "time": 1}, { "type": "IO1", "time": 1}, {"type": "CPU", "time": 3 }, { "type": "IO3", "time": 2}, {"type": "CPU", "time": 1 }]
+      }, {
+        "id": 7,
+        "arrival": 6,
+        "tasks": [{"type": "CPU", "time": 5}, { "type": "IO2", "time": 3}, {"type": "CPU", "time": 2 }]
+      }]
     }]
   }]
 }

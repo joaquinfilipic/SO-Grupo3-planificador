@@ -108,6 +108,10 @@ def print_table(processes, tasks, step_number)
 end
 
 system "clear" or system "cls"
+output = %x{java ../src/MainClass.java}
+print output
+
+=begin
 loop do
   print_table(row_headers_info, raw_gantt_data, step_number)
   print_references(step_number, autoplay_on)
@@ -127,3 +131,4 @@ loop do
   step_number += 1 if autoplay_on
   system "clear" or system "cls"
 end
+=end
