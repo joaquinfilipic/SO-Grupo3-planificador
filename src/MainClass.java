@@ -14,6 +14,7 @@ public class MainClass {
     private static Scheduler scheduler;
     private static int timer;
     private static char[][] matrix;
+    private static int[][] matrix2;
     private static int totalThreadsCount;
     private static Scheduler.ALGORITHM processesAlgorithm;
     private static ArrayList<Log> logArrayList;
@@ -39,6 +40,7 @@ public class MainClass {
         for (int i=0; i<(totalThreadsCount+3+coresArray.size()); i++){
             for (int j=0; j<50; j++){
                 matrix[i][j] = ' ';
+                matrix2[i][j] = 0;
             }
         }
         createProcessesKLTsAndTasks(); //provisional input
@@ -55,7 +57,7 @@ public class MainClass {
         scheduler = new Scheduler();
 
         // Create data from parsed input JSON
-        Parser parser = new Parser("/input/input.json");
+        Parser parser = new Parser("/input/item7CPU1.json");
         parser.parse();
         coresArray = parser.getCores();
         processesAlgorithm = parser.getProcessAlgorithm();
@@ -65,10 +67,12 @@ public class MainClass {
         // Initialize output matrix
         int rowsAmount = totalThreadsCount+3+coresArray.size();
         matrix = new char[rowsAmount][(int) parser.getTimeline()];
+        matrix2 = new int[rowsAmount][(int) parser.getTimeline()];
         //Empty matrix -> provisional output
         for (int i=0; i<(rowsAmount); i++){
             for (int j=0; j<parser.getTimeline(); j++){
                 matrix[i][j] = ' ';
+                matrix2[i][j] = 0;
             }
         }
 
@@ -346,6 +350,7 @@ public class MainClass {
                     if (!blockedQ.isEmpty()) {
                         //fill matrix
                         matrix[auxCounter + totalThreadsCount][timer] = (char) (blockedQ.peek().getID() + 48);
+                        matrix2[auxCounter + totalThreadsCount][timer] = blockedQ.peek().getID();
                             blockedQ.peek().decreaseTaskTime();
                     }
                     auxCounter++;
@@ -359,6 +364,7 @@ public class MainClass {
                         //fill matrix
                         if(!auxKLT2.hasULTs()) {
                             matrix[auxKLT2.getID() - 1][timer] = (char) (auxKLT2.getAssignedCore().getID() + 64);
+                            matrix2[auxKLT2.getID() - 1][timer] = (-1)*(auxKLT2.getAssignedCore().getID());
                         }
                         else{
                             ArrayList<Thing> uArray = new ArrayList<>();
@@ -369,6 +375,7 @@ public class MainClass {
                             auxKLT2.setCurrentULT(auxULT);
                             //fill matrix... review later
                             matrix[auxULT.getID() - 1][timer] = (char) (auxKLT2.getAssignedCore().getID() + 64);
+                            matrix2[auxKLT2.getID() - 1][timer] = (-1)*(auxKLT2.getAssignedCore().getID());
                             auxKLT2.setPrevULTRunning(auxULT);
                             auxKLT2.increaseWaitingTime();
                             auxKLT2.decreaseRemainingQ();
@@ -452,6 +459,7 @@ public class MainClass {
                         //Core is free -> SO running
                         int aux = totalThreadsCount + blockedQueuesArray.size() +coresArray.get(k).getID()-1;
                         matrix[aux][timer] = 'X';
+                        matrix2[aux][timer] = -3;
                     }
                 }
                 //if all klts in one process are blocked, then that process is blocked
@@ -474,12 +482,44 @@ public class MainClass {
         }
 
         //Show matrix
-        System.out.println("");
+        /*System.out.println("");
         for (int i=0; i<(totalThreadsCount+3+coresArray.size()); i++){
-            for (int j=0; j<50; j++){
+            for (int j=0; j<timer; j++){
                 System.out.printf("%c", matrix[i][j]);
             }
             System.out.println("");
+        }*/
+        //Show matrix 2
+        System.out.println("[");
+        for(Process process : processArray) {
+            System.out.print("\t{ name: 'proc" + process.getID() + "', klts: [");
+            for(Thing klt : process.getKLTArray()) {
+                System.out.print("{ name: 'klt" + klt.getID() + "', ults: [");
+                if (((KLT)klt).getULTArray() != null) {
+                    for (Thing ult : ((KLT) klt).getULTArray()) {
+                        System.out.print("{ name: 'ult" + ult.getID() + "'},");
+                    }
+                }
+                System.out.print("]},");
+            }
+            System.out.println("]},");
         }
+        System.out.println("]");
+
+        System.out.println("Gantt:");
+        System.out.printf("[");
+        System.out.println("");
+        for (int i=0; i<(totalThreadsCount+3+coresArray.size()); i++){
+            System.out.printf("[");
+            for (int j=0; j<50; j++){
+                //System.out.printf("'%c',", matrix[i][j]);
+                System.out.printf("'%d',", matrix2[i][j]);
+            }
+            System.out.printf("],");
+            System.out.println("");
+        }
+        System.out.printf("]");
+
+
     }
 }
