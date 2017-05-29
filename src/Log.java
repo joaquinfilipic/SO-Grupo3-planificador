@@ -36,6 +36,21 @@ public class Log {
         time = t;
     }
 
+    public boolean checkRemainingThings(){
+        if(readyProcessQueue.size() != 0){
+            return true;
+        }
+        if(runningKLTsArray.size()!= 0){
+            return true;
+        }
+        for(Queue<KLT> q : blockedQueuesArray){
+            if(q.size() != 0){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void showLog(){
         System.out.printf("Time: %d\n", time);
         System.out.printf("  READY PROCESS QUEUE:\n");

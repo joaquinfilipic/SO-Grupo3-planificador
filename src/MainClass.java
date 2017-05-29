@@ -62,9 +62,10 @@ public class MainClass {
         totalThreadsCount = (int) parser.getTotalThreads();
 
         // Initialize output matrix
-        matrix = new char[totalThreadsCount+3][(int) parser.getTimeline()];
+        int rowsAmount = totalThreadsCount+3+coresArray.size();
+        matrix = new char[rowsAmount][(int) parser.getTimeline()];
         //Empty matrix -> provisional output
-        for (int i=0; i<(totalThreadsCount+3); i++){
+        for (int i=0; i<(rowsAmount); i++){
             for (int j=0; j<parser.getTimeline(); j++){
                 matrix[i][j] = ' ';
             }
@@ -183,33 +184,12 @@ public class MainClass {
         }
     }
 
-    public static void fillLogsArray(int t){
-        Log l = new Log();
-        l.setTime(t);
-        //LOG: Running KLTs
-        for(Core c : coresArray){
-            if(!c.isFree()){
-                l.getRunningKLTsArray().add(c.getRunningKLT());
-            }
-        }
-        //LOG: Ready Process Queue
-        for(Process p : readyProcessQueue){
-            l.getReadyProcessQueue().add(p);
-        }
-        //LOG: Blocked Queues
-        for(int i = 0; i < blockedQueuesArray.size(); i++){
-            for(KLT k : blockedQueuesArray.get(i)){
-                l.getBlockedQueuesArray().get(i).add(k);
-            }
-        }
-        logArrayList.add(l);
-    }
-
     public static void main(String[] args){
         Integer timeline = loadInput();
+        boolean moreThingsToDo = true;
 
         //general timer
-        for(timer = 0; timer < timeline; timer++){
+        for(timer = 0; timer < timeline && moreThingsToDo; timer++){
             Log l = new Log();
             l.setTime(timer);
             checkBlockedQueues();
@@ -407,6 +387,11 @@ public class MainClass {
                         }
                     }
                 }
+                else {
+                    //Core is free -> SO running
+                    int aux = totalThreadsCount + blockedQueuesArray.size() +coresArray.get(k).getID()-1;
+                    matrix[aux][timer] = 'X';
+                }
             }
             //if all klts in one process are blocked, then that process is blocked
             for(int m = 0; m < processArray.size(); m++){
@@ -417,10 +402,13 @@ public class MainClass {
             //LOG
             logArrayList.add(l);
             logArrayList.get(timer).showLog();
+            if(!l.checkRemainingThings()){
+                moreThingsToDo = false;
+            }
         }
         //Show matrix
         System.out.println("");
-        for (int i=0; i<(totalThreadsCount+3); i++){
+        for (int i=0; i<(totalThreadsCount+3+coresArray.size()); i++){
             for (int j=0; j<50; j++){
                 System.out.printf("%c", matrix[i][j]);
             }
