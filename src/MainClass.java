@@ -57,7 +57,7 @@ public class MainClass {
         scheduler = new Scheduler();
 
         // Create data from parsed input JSON
-        Parser parser = new Parser("/input/item7CPU1.json");
+        Parser parser = new Parser("/input/item8.json");
         parser.parse();
         coresArray = parser.getCores();
         processesAlgorithm = parser.getProcessAlgorithm();
@@ -244,6 +244,12 @@ public class MainClass {
                     if(!readyProcessQueue.contains(auxKlt.getParentProcess()))
                         readyProcessQueue.add(auxKlt.getParentProcess());
                 }
+            }
+        }
+        //if all klts in one process are blocked, then that process is blocked
+        for(int m = 0; m < processArray.size(); m++){
+            if(processArray.get(m).allKLTsBlocked()){
+                readyProcessQueue.remove(processArray.get(m));
             }
         }
     }
@@ -463,11 +469,11 @@ public class MainClass {
                     }
                 }
                 //if all klts in one process are blocked, then that process is blocked
-                for(int m = 0; m < processArray.size(); m++){
+                /*for(int m = 0; m < processArray.size(); m++){
                     if(processArray.get(m).allKLTsBlocked()){
                         readyProcessQueue.remove(processArray.get(m));
                     }
-                }
+                }*/
                 //LOG
                 logArrayList.add(l);
 
@@ -489,8 +495,45 @@ public class MainClass {
             }
             System.out.println("");
         }*/
+
+        //SHOW EEEEVERYTHING
+        System.out.println("row_headers_info = [");
+        for(Process process : processArray) {
+            System.out.print("\t{ name: 'proc" + process.getID() + "', klts: [");
+            for(Thing klt : process.getKLTArray()) {
+                System.out.print("{ name: 'klt" + klt.getID() + "', ults: [");
+                if (((KLT)klt).getULTArray() != null) {
+                    for (Thing ult : ((KLT) klt).getULTArray()) {
+                        System.out.print("{ name: 'ult" + ult.getID() + "'},");
+                    }
+                }
+                System.out.print("]},");
+            }
+            System.out.println("]},");
+        }
+        System.out.println("\t{ name: 'cola_bloqueado1', klts: [ { name: '', ults: [] } ] },");
+        System.out.println("\t{ name: 'cola_bloqueado2', klts: [ { name: '', ults: [] } ] },");
+        System.out.println("\t{ name: 'cola_bloqueado3', klts: [ { name: '', ults: [] } ] },");
+        System.out.println("\t{ name: 'CPU1', klts: [ { name: '', ults: [] } ] },");
+        System.out.println("\t{ name: 'CPU2', klts: [ { name: '', ults: [] } ] },");
+        System.out.println("];");
+
+        //System.out.println("Gantt:");
+        System.out.printf("raw_gantt_data = [");
+        System.out.println("");
+        for (int i=0; i<(totalThreadsCount+3+coresArray.size()); i++){
+            System.out.printf("[");
+            for (int j=0; j< timer; j++){
+                System.out.printf("'%d',", matrix2[i][j]);
+            }
+            System.out.printf("],");
+            System.out.println("");
+        }
+        System.out.printf("]");
+
+
         //Show matrix 2
-        System.out.println("[");
+        /*System.out.println("[");
         for(Process process : processArray) {
             System.out.print("\t{ name: 'proc" + process.getID() + "', klts: [");
             for(Thing klt : process.getKLTArray()) {
@@ -511,14 +554,14 @@ public class MainClass {
         System.out.println("");
         for (int i=0; i<(totalThreadsCount+3+coresArray.size()); i++){
             System.out.printf("[");
-            for (int j=0; j<50; j++){
+            for (int j=0; j<timer; j++){
                 //System.out.printf("'%c',", matrix[i][j]);
                 System.out.printf("'%d',", matrix2[i][j]);
             }
             System.out.printf("],");
             System.out.println("");
         }
-        System.out.printf("]");
+        System.out.printf("]");*/
 
 
     }
