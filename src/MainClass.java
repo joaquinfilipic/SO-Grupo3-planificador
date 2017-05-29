@@ -15,11 +15,13 @@ public class MainClass {
     private static char[][] matrix;
     private static int totalThreadsCount;
     private static Scheduler.ALGORITHM processesAlgorithm;
+    private static ArrayList<Log> logArrayList;
 
     //EXAMPLE
     public static void createEverything(){
         readyProcessQueue = new ArrayList<>();
         blockedQueuesArray = new ArrayList<>();
+        logArrayList = new ArrayList<>();
         blockedQueuesArray.add(new LinkedList<>());
         blockedQueuesArray.add(new LinkedList<>());
         blockedQueuesArray.add(new LinkedList<>());
@@ -45,6 +47,7 @@ public class MainClass {
         // Create inner structures
         readyProcessQueue = new ArrayList<>();
         blockedQueuesArray = new ArrayList<>();
+        logArrayList = new ArrayList<>();
         blockedQueuesArray.add(new LinkedList<>());
         blockedQueuesArray.add(new LinkedList<>());
         blockedQueuesArray.add(new LinkedList<>());
@@ -180,14 +183,47 @@ public class MainClass {
         }
     }
 
+    public static void fillLogsArray(int t){
+        Log l = new Log();
+        l.setTime(t);
+        //LOG: Running KLTs
+        for(Core c : coresArray){
+            if(!c.isFree()){
+                l.getRunningKLTsArray().add(c.getRunningKLT());
+            }
+        }
+        //LOG: Ready Process Queue
+        for(Process p : readyProcessQueue){
+            l.getReadyProcessQueue().add(p);
+        }
+        //LOG: Blocked Queues
+        for(int i = 0; i < blockedQueuesArray.size(); i++){
+            for(KLT k : blockedQueuesArray.get(i)){
+                l.getBlockedQueuesArray().get(i).add(k);
+            }
+        }
+        logArrayList.add(l);
+    }
+
     public static void main(String[] args){
         Integer timeline = loadInput();
 
         //general timer
         for(timer = 0; timer < timeline; timer++){
+            Log l = new Log();
+            l.setTime(timer);
             checkBlockedQueues();
             checkArrivals();
-
+            //LOG: Ready Process Queue
+            for(Process p : readyProcessQueue){
+                l.getReadyProcessQueue().add(p);
+            }
+            //LOG: Blocked Queues
+            for(int i = 0; i < blockedQueuesArray.size(); i++){
+                for(KLT k : blockedQueuesArray.get(i)){
+                    l.getBlockedQueuesArray().get(i).add(k);
+                }
+            }
             //Run algorithm of selection for each core
             for(int n = 0; n < coresArray.size() && coresArray.get(n).isFree(); n++) {
                 ArrayList<Thing> pArray = new ArrayList<>();
@@ -243,6 +279,24 @@ public class MainClass {
                             }
                         }
                     }
+                }
+            }
+            //LOG: Running KLTs
+            for(Core c : coresArray){
+                if(!c.isFree()){
+                    l.getRunningKLTsArray().add(c.getRunningKLT());
+                }
+            }
+            //LOG: Ready Process Queue
+            for(Process p : readyProcessQueue){
+                boolean readyKLTs = false;
+                for(int j = 0; j < p.getKLTQueue().size() && !readyKLTs; j++){
+                    if( ((KLT)p.getKLTQueue().get(j)).getKltstate() == KLT.KLTSTATE.READY ){
+                        readyKLTs = true;
+                    }
+                }
+                if(readyKLTs){
+                    l.getReadyProcessQueue().add(p);
                 }
             }
             //Decrease time from klts in blocked queues
@@ -360,6 +414,9 @@ public class MainClass {
                     readyProcessQueue.remove(processArray.get(m));
                 }
             }
+            //LOG
+            logArrayList.add(l);
+            logArrayList.get(timer).showLog();
         }
         //Show matrix
         System.out.println("");
