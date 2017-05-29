@@ -3,55 +3,30 @@ require 'pp'
 require 'table_print'
 require './overrides'
 require './read_char'
+tp.set :max_width, 20000
 
-row_headers_info = [
-  {
-    name: 'proc1',
-    klts: [
-      {
-        name: 'klt1',
-        ults: [
-          { name: 'ult1'},
-          { name: 'ult2'},
-          { name: 'ult3'},
-          { name: 'ult4'},
-          { name: 'ult5'}
-        ]
-      },
-    ]
-  },
-  {
-    name: 'proc2',
-    klts: [
-      {
-        name: 'klt2',
-        ults: [
-        ]
-      },
-    ]
-  }
-]
+row_headers_info = []
+raw_gantt_data = []
+eval(gets, binding).
 
-raw_gantt_data = [
-  [' ','A','A',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-  [' ',' ',' ','A','A','A','A',' ',' ',' ',' ',' ',' ',' ',' ','A','A',' ',' ',' '],
-  [' ',' ',' ',' ',' ',' ',' ','A','A','A','A',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-  [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','A','A','A','A',' ',' ',' ',' ','A'],
-  [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','A','A',' '],
-  ['A',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-  [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-  [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-  [' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' '],
-]
-
+process_count = row_headers_info.size
+tasks_data = raw_gantt_data.first(process_count)
+colas_bloqueados = raw_gantt_data[process_count..process_count + 3]
+cpu_data = raw_gantt_data.last(2)
 
 def format_raw_gantt_data(tasks_array)
-  tasks_array.map { |x| x == 'A' ? 'X' : x }.join
+	char_map = {
+		'0' => ' ',
+		'-1' => 'A',
+		'-2' => 'B',
+		'-3' => 'X',
+	}
+  tasks_array.map { |x| char_map[x] || x }.join
 end
 
 def format_data_for_table(processes_array, tasks_array, step_number)
   matrixRowIndex = 0
-  processes_array.each do |process|
+    processes_array.each do |process|
     process.klts.each do |klt|
       if klt.ults.empty?
         klt.ults << { name: '', tasks: format_raw_gantt_data(tasks_array[matrixRowIndex].first(step_number) )}
@@ -139,4 +114,3 @@ loop do
   step_number += 1 if autoplay_on
   system "clear" or system "cls"
 end
-

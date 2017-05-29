@@ -26,7 +26,6 @@ def read_char2
     # See if a 'Q' has been typed yet
     while c = STDIN.read_nonblock(1)
       if c == "\e"
-        binding.pry
         c << STDIN.read_nonblock(3) rescue nil
         c << STDIN.read_nonblock(2) rescue nil
       end
