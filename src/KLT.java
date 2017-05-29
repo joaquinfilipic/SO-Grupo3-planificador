@@ -108,7 +108,10 @@ public class KLT extends Thing {
 
     public void setPrevULTRunning(ULT u) { prevULTRunning = u; }
 
-    public void setQuantum(int i) { quantum = i; }
+    public void setQuantum(int i) {
+        quantum = i;
+        remainingQ = i;
+    }
 
     public void setRemainingQ(int i) { remainingQ = i; }
 

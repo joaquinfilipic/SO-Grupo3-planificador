@@ -29,13 +29,13 @@ public class MainClass {
         Core core1 = new Core(1);
         Core core2 = new Core(2);
         coresArray.add(core1);
-        //coresArray.add(core2);
+        coresArray.add(core2);
         scheduler = new Scheduler();
         processesAlgorithm = Scheduler.ALGORITHM.FIFO; //for processes ONLY FIFO or SRT
-        totalThreadsCount = 5; //review later
-        matrix = new char[totalThreadsCount+3][50]; //review max amount of time to run
+        totalThreadsCount = 7; //review later
+        matrix = new char[totalThreadsCount+3+coresArray.size()][50]; //review max amount of time to run
         //Empty matrix -> provisional output
-        for (int i=0; i<(totalThreadsCount+3); i++){
+        for (int i=0; i<(totalThreadsCount+3+coresArray.size()); i++){
             for (int j=0; j<50; j++){
                 matrix[i][j] = ' ';
             }
@@ -54,7 +54,7 @@ public class MainClass {
         scheduler = new Scheduler();
 
         // Create data from parsed input JSON
-        Parser parser = new Parser("/input/input.json");
+        Parser parser = new Parser("/input/jock.json");
         parser.parse();
         coresArray = parser.getCores();
         processesAlgorithm = parser.getProcessAlgorithm();
@@ -78,49 +78,108 @@ public class MainClass {
         //Example with 3 processes, 8 klts, no ults
         //TASKS
         Task t1K1 = new Task(Task.TASKTYPE.CPU, 3);
+        Task t2K1 = new Task(Task.TASKTYPE.IO1, 1);
+        Task t3K1 = new Task(Task.TASKTYPE.CPU, 2);
         Queue<Task> k1TaskQ = new LinkedList<>();
         k1TaskQ.add(t1K1);
-        Task t1K2 = new Task(Task.TASKTYPE.CPU, 6);
+        k1TaskQ.add(t2K1);
+        k1TaskQ.add(t3K1);
+
+        Task t1K2 = new Task(Task.TASKTYPE.CPU, 2);
+        Task t2K2 = new Task(Task.TASKTYPE.IO2, 2);
+        Task t3K2 = new Task(Task.TASKTYPE.CPU, 3);
         Queue<Task> k2TaskQ = new LinkedList<>();
         k2TaskQ.add(t1K2);
+        k2TaskQ.add(t2K2);
+        k2TaskQ.add(t3K2);
         Task t1K3 = new Task(Task.TASKTYPE.CPU, 4);
+        Task t2K3 = new Task(Task.TASKTYPE.IO1, 2);
+        Task t3K3 = new Task(Task.TASKTYPE.CPU, 2);
         Queue<Task> k3TaskQ = new LinkedList<>();
         k3TaskQ.add(t1K3);
-        Task t1K4 = new Task(Task.TASKTYPE.CPU, 5);
-        Queue<Task> k4TaskQ = new LinkedList<>();
-        k4TaskQ.add(t1K4);
-        Task t1K5 = new Task(Task.TASKTYPE.CPU, 2);
-        Queue<Task> k5TaskQ = new LinkedList<>();
-        k5TaskQ.add(t1K5);
+        k3TaskQ.add(t2K3);
+        k3TaskQ.add(t3K3);
 
+        Task t1K4U4 = new Task(Task.TASKTYPE.CPU, 4);
+        Task t2K4U4 = new Task(Task.TASKTYPE.IO2, 1);
+        Task t3K4U4 = new Task(Task.TASKTYPE.CPU, 1);
+        Queue<Task> k4u4TaskQ = new LinkedList<>();
+        k4u4TaskQ.add(t1K4U4);
+        k4u4TaskQ.add(t2K4U4);
+        k4u4TaskQ.add(t3K4U4);
+        Task t1K4U5 = new Task(Task.TASKTYPE.CPU, 2);
+        Task t2K4U5 = new Task(Task.TASKTYPE.IO1, 3);
+        Task t3K4U5 = new Task(Task.TASKTYPE.CPU, 1);
+        Queue<Task> k4u5TaskQ = new LinkedList<>();
+        k4u5TaskQ.add(t1K4U5);
+        k4u5TaskQ.add(t2K4U5);
+        k4u5TaskQ.add(t3K4U5);
+        Task t1K6U6 = new Task(Task.TASKTYPE.CPU, 1);
+        Task t2K6U6 = new Task(Task.TASKTYPE.IO1, 1);
+        Task t3K6U6 = new Task(Task.TASKTYPE.CPU, 3);
+        Task t4K6U6 = new Task(Task.TASKTYPE.IO3, 2);
+        Task t5K6U6 = new Task(Task.TASKTYPE.CPU, 1);
+        Queue<Task> k6u6TaskQ = new LinkedList<>();
+        k6u6TaskQ.add(t1K6U6);
+        k6u6TaskQ.add(t2K6U6);
+        k6u6TaskQ.add(t3K6U6);
+        k6u6TaskQ.add(t4K6U6);
+        k6u6TaskQ.add(t5K6U6);
+        Task t1K6U7 = new Task(Task.TASKTYPE.CPU, 5);
+        Task t2K6U7 = new Task(Task.TASKTYPE.IO2, 3);
+        Task t3K6U7 = new Task(Task.TASKTYPE.CPU, 2);
+        Queue<Task> k6u7TaskQ = new LinkedList<>();
+        k6u7TaskQ.add(t1K6U7);
+        k6u7TaskQ.add(t2K6U7);
+        k6u7TaskQ.add(t3K6U7);
 
         //ULTs
-        ULT u1 = new ULT(1, 0, k1TaskQ);
-        ULT u2 = new ULT(2, 2, k2TaskQ);
-        ULT u3 = new ULT(3, 4, k3TaskQ);
-        ULT u4 = new ULT(4, 6, k4TaskQ);
-        ULT u5 = new ULT(5, 8, k5TaskQ);
+        ULT u4 = new ULT(4, 0, k4u4TaskQ);
+        ULT u5 = new ULT(5, 2, k4u5TaskQ);
+        ULT u6 = new ULT(6, 4, k6u6TaskQ);
+        ULT u7 = new ULT(7, 6, k6u7TaskQ);
 
         //KLTs
-        ArrayList<Thing> k1ArrayT = new ArrayList<>();
-        k1ArrayT.add(u1);
-        k1ArrayT.add(u2);
-        k1ArrayT.add(u3);
-        k1ArrayT.add(u4);
-        k1ArrayT.add(u5);
+        KLT k1 = new KLT(1, 0, k1TaskQ);
+        KLT k2 = new KLT(2, 3, k2TaskQ);
+        KLT k3 = new KLT(3, 8, k3TaskQ);
 
-        KLT k1 = new KLT(1, new Scheduler(), Scheduler.ALGORITHM.RR, k1ArrayT);
-        k1.setQuantum(4);
+        ArrayList<Thing> k4ArrayT = new ArrayList<>();
+        ArrayList<Thing> k6ArrayT = new ArrayList<>();
+        k4ArrayT.add(u4);
+        k4ArrayT.add(u5);
+        k6ArrayT.add(u6);
+        k6ArrayT.add(u7);
+
+        KLT k4 = new KLT(4, new Scheduler(), Scheduler.ALGORITHM.RR, k4ArrayT);
+        k4.setQuantum(4);
+        KLT k6 = new KLT(6, new Scheduler(), Scheduler.ALGORITHM.RR, k6ArrayT);
+        k6.setQuantum(4);
 
         //PROCESSES
         ArrayList<Thing> p1ArrayT = new ArrayList<>();
         p1ArrayT.add(k1);
+        ArrayList<Thing> p2ArrayT = new ArrayList<>();
+        p2ArrayT.add(k2);
+        p2ArrayT.add(k3);
+        ArrayList<Thing> p4ArrayT = new ArrayList<>();
+        p4ArrayT.add(k4);
+        p4ArrayT.add(k6);
 
         Process p1 = new Process(1, p1ArrayT, new Scheduler());
+        Process p2 = new Process(2, p2ArrayT, new Scheduler());
+        Process p4 = new Process(4, p4ArrayT, new Scheduler());
 
         k1.setParentProcess(p1);
+        k2.setParentProcess(p2);
+        k3.setParentProcess(p2);
+        k4.setParentProcess(p4);
+        k6.setParentProcess(p4);
+
         processArray = new ArrayList<>();
         processArray.add(p1);
+        processArray.add(p2);
+        processArray.add(p4);
     }
 
     public static void checkArrivals(){
@@ -304,6 +363,7 @@ public class MainClass {
                         for (Thing u : auxKLT2.getULTQueue()){
                             uArray.add(u);
                         }
+                        System.out.printf("\n%d, %d, %d \n",auxKLT2.getULTQueue().get(0).getID(),auxKLT2.getQuantum(),auxKLT2.getRemainingQ());
                         auxULT = (ULT) auxKLT2.getScheduler().schedule(auxKLT2);
                         auxKLT2.setCurrentULT(auxULT);
                         //fill matrix... review later
