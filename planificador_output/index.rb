@@ -114,14 +114,14 @@ logfile = File.open("../log.txt", "rb")
 contents = logfile.read
 queueslogged = contents.split("-----")
 
-def print_logged_step(step_number)
+def print_logged_step(step_number, queues)
   puts "\n"
-  puts queueslogged[step_number]
+  puts queues[step_number - 1]
 end
 
 loop do
   print_table(row_headers_info, raw_gantt_data, step_number)
-  print_logged_step(step_number)
+  print_logged_step(step_number, queueslogged) unless step_number == 0
   print_references(step_number, autoplay_on)
   c = read_char2
   case c

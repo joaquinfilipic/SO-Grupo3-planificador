@@ -1,0 +1,168 @@
+{
+  "cpu": 1,
+  "timeline": 500,
+  "processAlgorithm": {
+    "name": "SRT",
+    "quantum": null
+  },
+  "KLTAlgorithm": {
+    "name": "FIFO",
+    "quantum": null
+  },
+  "ULTAlgorithm": {
+    "name": "FIFO",
+    "quantum": null
+  },
+  "tasks": [{
+    "arrival": 0,
+    "id": 1,
+    "klts": [{
+      "id": 1,
+      "arrival": 0,
+      "ults": null,
+      "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO1"}, {"time": 4, "type": "CPU"}]
+    }, {
+      "id": 2,
+      "arrival": 0,
+      "ults": [{
+        "id": 2,
+        "arrival": 0,
+        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO1"}, {"time": 4, "type": "CPU"}]
+      }, {
+        "id": 3,
+        "arrival": 4,
+        "tasks": [{ "time": 3, "type": "CPU"}, { "time": 3, "type": "IO2"}, {"time": 5, "type": "CPU"}]
+      }],
+      "tasks": null
+    }]},
+    {
+    "arrival": 0,
+    "id": 4,
+    "klts": [{
+      "id": 4,
+      "arrival": 5,
+      "ults": null,
+      "tasks": [{ "time": 3, "type": "CPU"}, { "time": 1, "type": "IO1"}, {"time": 4, "type": "CPU"}]
+    }, {
+      "id": 5,
+      "arrival": 0,
+      "ults": [{
+        "id": 5,
+        "arrival": 2,
+        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO3"}, {"time": 2, "type": "CPU"}]
+      }, {
+        "id": 6,
+        "arrival": 3,
+        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO2"}, {"time": 4, "type": "CPU"}]
+      }],
+      "tasks": null
+    }]},
+    {
+    "arrival": 0,
+    "id": 7,
+    "klts": [{
+      "id": 7,
+      "arrival": 20,
+      "ults": null,
+      "tasks": [{ "time": 1, "type": "CPU"}, { "time": 4, "type": "IO3"}, {"time": 2, "type": "CPU"}]
+    }, {
+      "id": 8,
+      "arrival": 0,
+      "ults": [{
+        "id": 8,
+        "arrival": 6,
+        "tasks": [{ "time": 5, "type": "CPU"}, { "time": 3, "type": "IO2"}, {"time": 4, "type": "CPU"}]
+      }, {
+        "id": 9,
+        "arrival": 7,
+        "tasks": [{ "time": 1, "type": "CPU"}, { "time": 3, "type": "IO1"}, {"time": 1, "type": "CPU"}]
+      }],
+      "tasks": null
+    }]},
+    {
+    "arrival": 0,
+    "id": 10,
+    "klts": [{
+      "id": 10,
+      "arrival": 15,
+      "ults": null,
+      "tasks": [{ "time": 3, "type": "CPU"}, { "time": 1, "type": "IO1"}, {"time": 4, "type": "CPU"}]
+    }]},
+    {
+    "arrival": 0,
+    "id": 11,
+    "klts": [{
+      "id": 11,
+      "arrival": 5,
+      "ults": null,
+      "tasks": [{ "time": 2, "type": "CPU"}, { "time": 1, "type": "IO3"}, {"time": 1, "type": "CPU"}]
+    }]},
+    {
+    "arrival": 0,
+    "id": 12,
+    "klts": [{
+      "id": 12,
+      "arrival": 0,
+      "ults": [{
+        "id": 12,
+        "arrival": 0,
+        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO2"}, {"time": 2, "type": "CPU"}]
+      }, {
+        "id": 13,
+        "arrival": 4,
+        "tasks": [{ "time": 3, "type": "CPU"}, { "time": 3, "type": "IO3"}, {"time": 1, "type": "CPU"}]
+      }],
+      "tasks": null
+    }]},
+    {
+    "arrival": 0,
+    "id": 14,
+    "klts": [{
+      "id": 14,
+      "arrival": 0,
+      "ults": [{
+        "id": 14,
+        "arrival": 0,
+        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO2"}, {"time": 2, "type": "CPU"}]
+      }, {
+        "id": 15,
+        "arrival": 4,
+        "tasks": [{ "time": 3, "type": "CPU"}, { "time": 3, "type": "IO3"}, {"time": 1, "type": "CPU"}]
+      }, {
+        "id": 16,
+        "arrival": 4,
+        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 1, "type": "IO1"}, {"time": 5, "type": "CPU"}]
+      }],
+      "tasks": null
+    }]},
+    {
+    "arrival": 0,
+    "id": 17,
+    "klts": [{
+      "id": 17,
+      "arrival": 0,
+      "ults": [{
+        "id": 17,
+        "arrival": 11,
+        "tasks": [{ "time": 1, "type": "CPU"}, { "time": 4, "type": "IO1"}, {"time": 2, "type": "CPU"}]
+      }, {
+        "id": 18,
+        "arrival": 13,
+        "tasks": [{ "time": 3, "type": "CPU"}, { "time": 2, "type": "IO2"}, {"time": 2, "type": "CPU"}]
+      }, {
+        "id": 19,
+        "arrival": 15,
+        "tasks": [{ "time": 4, "type": "CPU"}, { "time": 1, "type": "IO3"}, {"time": 4, "type": "CPU"}]
+      }],
+      "tasks": null
+    }]},
+    {
+    "arrival": 0,
+    "id": 20,
+    "klts": [{
+      "id": 20,
+      "arrival": 30,
+      "ults": null,
+      "tasks": [{ "time": 4, "type": "CPU"}, { "time": 2, "type": "IO2"}, {"time": 2, "type": "CPU"}]
+    }]}]
+}

@@ -2,7 +2,7 @@
   "cpu": 2,
   "timeline": 50,
   "processAlgorithm": {
-    "name": "FIFO",
+    "name": "SRT",
     "quantum": null
   },
   "KLTAlgorithm": {

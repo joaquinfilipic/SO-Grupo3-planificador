@@ -1,0 +1,82 @@
+{
+  "cpu": 1,
+  "timeline": 100,
+  "processAlgorithm": {
+    "name": "SRT",
+    "quantum": null
+  },
+  "KLTAlgorithm": {
+    "name": "FIFO",
+    "quantum": null
+  },
+  "ULTAlgorithm": {
+    "name": "RR",
+    "quantum": 4
+  },
+  "tasks": [{
+    "arrival": 0,
+    "id": 1,
+    "klts": [{
+      "id": 1,
+      "arrival": 0,
+      "ults": null,
+      "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO1"}, {"time": 4, "type": "CPU"}]
+    }, {
+      "id": 2,
+      "arrival": 0,
+      "ults": [{
+        "id": 2,
+        "arrival": 0,
+        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO1"}, {"time": 4, "type": "CPU"}]
+      }, {
+        "id": 3,
+        "arrival": 4,
+        "tasks": [{ "time": 3, "type": "CPU"}, { "time": 3, "type": "IO2"}, {"time": 5, "type": "CPU"}]
+      }],
+      "tasks": null
+    }]},
+    {
+    "arrival": 0,
+    "id": 4,
+    "klts": [{
+      "id": 4,
+      "arrival": 0,
+      "ults": null,
+      "tasks": [{ "time": 3, "type": "CPU"}, { "time": 1, "type": "IO1"}, {"time": 4, "type": "CPU"}]
+    }, {
+      "id": 5,
+      "arrival": 0,
+      "ults": [{
+        "id": 5,
+        "arrival": 0,
+        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO3"}, {"time": 2, "type": "CPU"}]
+      }, {
+        "id": 6,
+        "arrival": 4,
+        "tasks": [{ "time": 2, "type": "CPU"}, { "time": 3, "type": "IO2"}, {"time": 4, "type": "CPU"}]
+      }],
+      "tasks": null
+    }]},
+    {
+    "arrival": 0,
+    "id": 7,
+    "klts": [{
+      "id": 7,
+      "arrival": 0,
+      "ults": null,
+      "tasks": [{ "time": 1, "type": "CPU"}, { "time": 4, "type": "IO3"}, {"time": 2, "type": "CPU"}]
+    }, {
+      "id": 8,
+      "arrival": 0,
+      "ults": [{
+        "id": 8,
+        "arrival": 0,
+        "tasks": [{ "time": 5, "type": "CPU"}, { "time": 3, "type": "IO2"}, {"time": 4, "type": "CPU"}]
+      }, {
+        "id": 9,
+        "arrival": 4,
+        "tasks": [{ "time": 1, "type": "CPU"}, { "time": 3, "type": "IO1"}, {"time": 1, "type": "CPU"}]
+      }],
+      "tasks": null
+    }]}]
+}
