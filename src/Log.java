@@ -72,5 +72,6 @@ public class Log {
             file.printf("  RUNNING IN CORE %d:\n", k.getAssignedCore().getID());
             file.printf("    KLT ID: %d\n",k.getID());
         }
+        file.printf("-----\n");
     }
 }

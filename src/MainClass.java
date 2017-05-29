@@ -473,8 +473,6 @@ public class MainClass {
         } catch (Throwable e) {
         }
 
-
-
         //Show matrix
         System.out.println("");
         for (int i=0; i<(totalThreadsCount+3+coresArray.size()); i++){
